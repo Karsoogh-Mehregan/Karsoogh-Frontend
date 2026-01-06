@@ -77,11 +77,6 @@ export function XOCanvas() {
   const rafRef = useRef<number | null>(null);
 
   useEffect(() => {
-    // Environment check
-    if (typeof navigator !== 'undefined' && /jsdom/i.test(navigator.userAgent)) {
-      return;
-    }
-
     const canvas = canvasRef.current;
     if (!canvas) return;
 
