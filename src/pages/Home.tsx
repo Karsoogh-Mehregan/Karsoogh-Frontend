@@ -1,3 +1,4 @@
+import Navbar from '@/components/Navbar';
 import { XOCanvas } from '@/components/XOCanvas';
 
 export function Home() {
@@ -7,12 +8,8 @@ export function Home() {
       dir="rtl"
       lang="fa"
     >
+      <Navbar />
       <XOCanvas />
-      <div className="relative z-10 flex flex-col items-center w-full">
-        <h1 className="text-4xl sm:text-5xl md:text-6xl font-orbitron font-bold tracking-widest animate-glow select-none drop-shadow-lg">
-          Karsoogh
-        </h1>
-      </div>
     </div>
   );
 }
