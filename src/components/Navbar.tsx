@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Menu, X } from 'lucide-react';
-import logoIcon from '../assets/Karsoogh.ico';
+import logoIcon from '@/assets/Karsoogh.ico';
 
 type NavbarItemData = {
   content: string;
