@@ -3,13 +3,18 @@ import router from '@/router';
 import { authService } from '@/services/authService';
 import { useState, type FormEvent } from 'react';
 import toast from 'react-hot-toast';
+import { useLocation } from 'react-router-dom';
 
 export default function LoginPage() {
   const { login } = useAuth();
+  const location = useLocation();
+
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string>('');
   const [username, setUsername] = useState<string>('');
   const [password, setPassword] = useState<string>('');
+
+  const from = location.state?.from?.pathname || '/dashboard';
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -20,7 +25,7 @@ export default function LoginPage() {
       const response = await authService.login({ username, password });
       login(response.user);
       toast.success('ورود با موفقیت انجام شد');
-      router.navigate('/dashboard');
+      router.navigate(from, { replace: true });
     } catch (err) {
       console.log(err);
       const errMessage = (err as Error).message;
