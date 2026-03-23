@@ -1,5 +1,3 @@
-import router from '@/router';
-
 export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
 
 interface RefreshSubItem {
@@ -107,7 +105,7 @@ class ApiClient {
             return this.handleResponse<T>(newResponse, endpoint, options, true);
           } catch (refreshError) {
             this.isRefreshing = false;
-            router.navigate('/login');
+            // router.navigate('/login');
 
             const err =
               refreshError instanceof Error

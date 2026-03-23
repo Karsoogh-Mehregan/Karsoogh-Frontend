@@ -1,8 +1,10 @@
 import { useAuth } from '@/context/AuthContext';
+import router from '@/router';
 import { authService } from '@/services/authService';
+import toast from 'react-hot-toast';
 
 export default function Dashboard() {
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
 
   return (
     <>
@@ -10,6 +12,9 @@ export default function Dashboard() {
       <button
         onClick={() => {
           authService.logout();
+          logout();
+          toast.success('با موفقیت خارج شدید.');
+          router.navigate('/');
         }}
       >
         Logout

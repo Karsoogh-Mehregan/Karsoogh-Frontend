@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Menu, X } from 'lucide-react';
 import logoIcon from '@/assets/Karsoogh.ico';
+import { Link } from 'react-router-dom';
 
 type NavbarItemData = {
   content: string;
@@ -43,23 +44,23 @@ const Logo = () => {
 
 const LoginButton = () => {
   return (
-    <a
-      href="/login"
+    <Link
+      to="/login"
       className="flex items-center justify-center cursor-pointer select-none border border-white/20 text-white px-5 py-1.5 md:px-6 md:py-2 rounded-lg font-bold hover:bg-white/10 transition-all hover:-translate-y-0.5 active:scale-95 text-sm md:text-base"
     >
       ورود
-    </a>
+    </Link>
   );
 };
 
 const SingUpButton = () => {
   return (
-    <a
-      href="/sign-up"
+    <Link
+      to="/sign-up"
       className="hidden md:flex items-center justify-center cursor-pointer select-none bg-white text-[#0d1117] px-6 py-2 rounded-lg font-bold hover:bg-gray-200 transition-all hover:-translate-y-0.5 active:scale-95"
     >
       ثبت نام
-    </a>
+    </Link>
   );
 };
 

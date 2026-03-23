@@ -1,12 +1,12 @@
 import { useAuth } from '@/context/AuthContext';
 import router from '@/router';
 import { authService } from '@/services/authService';
-import { useState, type FormEvent } from 'react';
+import { useEffect, useState, type FormEvent } from 'react';
 import toast from 'react-hot-toast';
 import { useLocation } from 'react-router-dom';
 
 export default function LoginPage() {
-  const { login } = useAuth();
+  const { login, isAuthenticated } = useAuth();
   const location = useLocation();
 
   const [isLoading, setIsLoading] = useState(false);
@@ -15,6 +15,12 @@ export default function LoginPage() {
   const [password, setPassword] = useState<string>('');
 
   const from = location.state?.from?.pathname || '/dashboard';
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      router.navigate('/dashboard');
+    }
+  }, [isAuthenticated]);
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
