@@ -4,6 +4,13 @@
 
 @import url('https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/font-face.css');
 
+:root {
+  --c-bg: #0d1117;
+
+
+}
+
+
 body {
   @apply font-sans;
 }
@@ -19,7 +26,7 @@ body,
   padding: 0;
 }
 body {
-  background: #0d1117;
+  background: var(--c-bg);
   color: #e6edf3;
   -webkit-font-smoothing: antialiased;
 }

@@ -14,6 +14,7 @@ function App() {
             // TODO: make this better later
             background: '#333',
             color: '#fff',
+            cursor: 'pointer',
           },
         }}
       />
