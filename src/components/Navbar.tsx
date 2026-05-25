@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Menu, X } from 'lucide-react';
+import { FlaskConical, LogIn, Menu, Sparkles, X } from 'lucide-react';
 import logoIcon from '@/assets/Karsoogh.ico';
 import { Link } from 'react-router-dom';
 
@@ -9,21 +9,25 @@ type NavbarItemData = {
 };
 
 const NavBarItems: NavbarItemData[] = [
-  { content: 'خانه', href: '/' },
-  { content: 'درباره ما', href: '/About' },
+  { content: 'خانه', href: '#Home' },
+  { content: 'درباره', href: '#About' },
+  { content: 'پرسش و پاسخ', href: '#FAQ' },
+  { content: 'گالری تصاویر', href: '#Gallery' },
+  { content: 'کادر برگزاری', href: '#Team' },
+  { content: 'انتقاد و پیشنهاد', href: '#Comment' },
+  { content: 'چالش هفتگی', href: '#Challenge' },
 ];
 
 const NavItems = () => {
   return (
-    <div className="hidden md:flex items-center gap-10 h-full">
+    <div className="hidden h-full items-center gap-1 lg:flex">
       {NavBarItems.map(({ content, href }, index) => (
         <a
           key={index}
           href={href}
-          className="relative flex items-center h-full text-gray-300 text-base font-semibold hover:text-white transition-colors group"
+          className="relative flex h-10 items-center whitespace-nowrap rounded-xl px-3 text-xs font-bold text-slate-300 transition-colors hover:bg-white/[0.06] hover:text-white xl:text-sm"
         >
           {content}
-          <span className="absolute bottom-0 left-0 w-full h-[2px] bg-white scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-in-out origin-center" />
         </a>
       ))}
     </div>
@@ -32,35 +36,40 @@ const NavItems = () => {
 
 const Logo = () => {
   return (
-    <div className="group cursor-pointer">
+    <Link to="/" className="group flex items-center gap-3">
       <img
         src={logoIcon}
         alt="Karsoogh Logo"
-        className="w-10 h-10 md:w-12 md:h-12 object-contain transition-transform group-hover:scale-105"
+        className="h-10 w-10 object-contain transition-transform group-hover:scale-105 md:h-12 md:w-12"
       />
-    </div>
+      <span className="hidden text-right leading-tight sm:block">
+        <span className="block text-sm font-black tracking-wide text-white">Karsoogh</span>
+        <span className="block text-[11px] font-bold text-cyan-100/70">ریاضی مهرگان</span>
+      </span>
+    </Link>
   );
 };
 
 const LoginButton = () => {
   return (
-    <Link
-      to="/login"
-      className="flex items-center justify-center cursor-pointer select-none border border-white/20 text-white px-5 py-1.5 md:px-6 md:py-2 rounded-lg font-bold hover:bg-white/10 transition-all hover:-translate-y-0.5 active:scale-95 text-sm md:text-base"
-    >
+    <Link to="/login" className="lab-button-secondary min-h-10 px-4 py-2 text-xs md:text-sm">
+      <LogIn size={16} aria-hidden="true" />
       ورود
     </Link>
   );
 };
 
-const SingUpButton = () => {
+const SignUpButton = () => {
   return (
-    <Link
-      to="/sign-up"
-      className="hidden md:flex items-center justify-center cursor-pointer select-none bg-white text-[#0d1117] px-6 py-2 rounded-lg font-bold hover:bg-gray-200 transition-all hover:-translate-y-0.5 active:scale-95"
+    <button
+      type="button"
+      className="lab-button-primary hidden min-h-10 px-4 py-2 text-xs md:inline-flex md:text-sm"
+      disabled
+      title="ثبت‌نام به‌زودی فعال می‌شود"
     >
-      ثبت نام
-    </Link>
+      <Sparkles size={16} aria-hidden="true" />
+      ثبت‌نام به‌زودی
+    </button>
   );
 };
 
@@ -72,7 +81,13 @@ const Hamburger = ({
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
   return (
-    <button className="md:hidden text-white p-1 cursor-pointer" onClick={() => setIsOpen(!isOpen)}>
+    <button
+      type="button"
+      className="lab-button-ghost min-h-10 px-3 py-2 lg:hidden"
+      onClick={() => setIsOpen(!isOpen)}
+      aria-label={isOpen ? 'بستن منو' : 'باز کردن منو'}
+      aria-expanded={isOpen}
+    >
       {isOpen ? <X size={28} /> : <Menu size={28} />}
     </button>
   );
@@ -85,38 +100,33 @@ const MobileMenu = ({
   isOpen: boolean;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
+  if (!isOpen) return null;
+
   return (
-    <div
-      className={`
-          absolute top-full left-0 w-full 
-          border-t border-white/5 border-b border-white/10
-          transition-all duration-300 ease-in-out md:hidden
-          ${isOpen ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4 pointer-events-none'}
-        `}
-    >
-      <div className="w-full h-full bg-gray-900/95 backdrop-blur-md">
-        <ul className="flex flex-col items-center gap-8 text-xl py-10">
+    <div className="absolute left-0 top-[calc(100%+0.6rem)] w-full transition-all duration-300 ease-in-out lg:hidden">
+      <div className="max-h-[calc(100vh-6.5rem)] overflow-y-auto rounded-3xl border border-white/10 bg-[#070b14] p-4 shadow-2xl shadow-black/50 backdrop-blur-xl">
+        <ul className="flex flex-col gap-2 text-base">
           {NavBarItems.map((item, index) => (
             <li key={index}>
               <a
                 onClick={() => setIsOpen(false)}
                 href={item.href}
-                className="text-gray-300 hover:text-white transition-colors"
+                className="flex min-h-12 items-center rounded-2xl px-4 font-bold text-slate-200 transition-colors hover:bg-white/[0.07] hover:text-white"
               >
                 {item.content}
               </a>
             </li>
           ))}
 
-          {/* Sign Up Button inside Mobile Menu */}
-          <li className="w-full px-10">
-            <a
-              href="/sign-up"
-              onClick={() => setIsOpen(false)}
-              className="flex items-center justify-center w-full py-4 bg-white text-[#0d1117] rounded-xl font-bold active:scale-95 transition-transform shadow-lg"
+          <li className="pt-2">
+            <button
+              type="button"
+              className="lab-button-primary w-full"
+              disabled
+              title="ثبت‌نام به‌زودی فعال می‌شود"
             >
-              ثبت نام
-            </a>
+              تاریخ ثبت‌نام به‌زودی
+            </button>
           </li>
         </ul>
       </div>
@@ -127,17 +137,24 @@ const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <nav className="fixed top-0 left-0 w-full h-16 bg-gray-800/30 backdrop-blur-md border-b border-white/10 flex items-center z-50">
-      <div className="w-[90%] max-w-12xl mx-auto flex justify-between items-center h-full">
-        <div className="flex items-center gap-12 md:gap-16 h-full">
+    <nav
+      className="fixed inset-x-3 top-3 z-50 flex h-16 items-center rounded-3xl border border-white/10 bg-[#070b14] shadow-2xl shadow-black/35 backdrop-blur-2xl md:inset-x-4 lg:inset-x-0 lg:top-0 lg:h-20 lg:rounded-none lg:border-x-0 lg:border-t-0 lg:bg-slate-950/78"
+      dir="rtl"
+      aria-label="ناوبری اصلی"
+    >
+      <div className="lab-container flex h-full items-center justify-between">
+        <div className="flex h-full items-center gap-5 md:gap-8">
           <Logo />
           <NavItems />
         </div>
 
-        <div className="flex items-center gap-4 md:gap-6">
+        <div className="flex items-center gap-2 md:gap-3">
+          <span className="hidden items-center gap-2 rounded-full border border-amber-200/20 bg-amber-200/10 px-3 py-2 text-xs font-bold text-amber-100 lg:inline-flex">
+            <FlaskConical size={14} aria-hidden="true" />
+            دوره ۲۶
+          </span>
           <LoginButton />
-          <SingUpButton />
-
+          <SignUpButton />
           <Hamburger isOpen={isOpen} setIsOpen={setIsOpen} />
         </div>
       </div>

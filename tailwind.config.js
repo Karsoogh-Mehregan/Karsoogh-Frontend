@@ -23,7 +23,8 @@ export default {
         'float-fast': 'floatUp 15s linear infinite',
       },
       fontFamily: {
-        sans: ['Vazir', 'ui-sans-serif', 'system-ui'], // set Vazir as default sans
+        sans: ['var(--font-primary)', 'ui-sans-serif', 'system-ui'],
+        secondary: ['var(--font-secondary)', 'ui-sans-serif', 'system-ui'],
       },
     },
   },

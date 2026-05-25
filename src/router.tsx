@@ -1,18 +1,21 @@
 import { createBrowserRouter, Navigate } from 'react-router-dom';
-import LoginPage from '@/pages/LoginPage';
-import { Home } from '@/pages/Home';
 import ProtectedRoute from './components/ProtectedRoute';
-import Dashboard from './pages/Dashboard';
 
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <Home />,
+    lazy: async () => {
+      const { Home } = await import('@/pages/Home');
+      return { Component: Home };
+    },
   },
 
   {
     path: '/login',
-    element: <LoginPage />,
+    lazy: async () => {
+      const { default: LoginPage } = await import('@/pages/LoginPage');
+      return { Component: LoginPage };
+    },
   },
 
   /* --- Protected Routes --- */
@@ -21,7 +24,10 @@ const router = createBrowserRouter([
     children: [
       {
         path: '/dashboard',
-        element: <Dashboard />,
+        lazy: async () => {
+          const { default: Dashboard } = await import('@/pages/Dashboard');
+          return { Component: Dashboard };
+        },
       },
     ],
   },

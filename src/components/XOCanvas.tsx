@@ -1,7 +1,5 @@
 import { useEffect, useRef } from 'react';
 
-// --- 1. MOVED OUTSIDE: Interface, Constants, and Class ---
-
 interface Particle {
   x: number;
   y: number;
@@ -12,14 +10,13 @@ interface Particle {
   rotation: number;
   rotationSpeed: number;
   color: string;
+  alpha: number;
   update: (canvasWidth: number, canvasHeight: number) => void;
   draw: (ctx: CanvasRenderingContext2D) => void;
 }
 
-// Move colors outside so the class can access it
-const COLORS = ['#3B82F6', '#EF4444', '#10B981', '#F59E0B'];
+const COLORS = ['#39D3FF', '#F9B44A', '#6EE7B7', '#FF5D7D'];
 
-// Move the Class definition strictly OUTSIDE the component function
 class XOParticle implements Particle {
   x: number;
   y: number;
@@ -30,17 +27,19 @@ class XOParticle implements Particle {
   rotation: number;
   rotationSpeed: number;
   color: string;
+  alpha: number;
 
   constructor(w: number, h: number) {
     this.x = Math.random() * w;
     this.y = Math.random() * h;
     this.char = Math.random() > 0.5 ? 'X' : 'O';
-    this.size = Math.random() * 20 + 10;
-    this.speedX = Math.random() * 1 - 0.5;
-    this.speedY = Math.random() * 1 - 0.5;
+    this.size = Math.random() * 26 + 14;
+    this.speedX = Math.random() * 0.34 - 0.17;
+    this.speedY = Math.random() * 0.34 - 0.17;
     this.rotation = Math.random() * 360;
-    this.rotationSpeed = (Math.random() - 0.5) * 0.05;
+    this.rotationSpeed = (Math.random() - 0.5) * 0.012;
     this.color = COLORS[Math.floor(Math.random() * COLORS.length)];
+    this.alpha = Math.random() * 0.34 + 0.16;
   }
 
   update(width: number, height: number) {
@@ -48,7 +47,6 @@ class XOParticle implements Particle {
     this.y += this.speedY;
     this.rotation += this.rotationSpeed;
 
-    // Wrap-around Logic
     if (this.x > width + 50) this.x = -50;
     if (this.x < -50) this.x = width + 50;
     if (this.y > height + 50) this.y = -50;
@@ -60,7 +58,8 @@ class XOParticle implements Particle {
     ctx.translate(this.x, this.y);
     ctx.rotate(this.rotation);
 
-    ctx.font = `bold ${this.size}px sans-serif`;
+    ctx.globalAlpha = this.alpha;
+    ctx.font = `800 ${this.size}px Vazirmatn, sans-serif`;
     ctx.fillStyle = this.color;
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
@@ -70,11 +69,10 @@ class XOParticle implements Particle {
   }
 }
 
-// --- 2. The Component Function ---
-
 export function XOCanvas() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const rafRef = useRef<number | null>(null);
+  const sizeRef = useRef({ width: 0, height: 0 });
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -83,42 +81,115 @@ export function XOCanvas() {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    const getCanvasBounds = () => ({
+      width: window.innerWidth,
+      height: Math.ceil(window.visualViewport?.height || window.innerHeight),
+    });
+
     const setCanvasSize = () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
+      const { width, height } = getCanvasBounds();
+      const ratio = 1;
+
+      canvas.width = width * ratio;
+      canvas.height = height * ratio;
+      canvas.style.width = `${width}px`;
+      canvas.style.height = `${height}px`;
+      sizeRef.current = { width, height };
+      ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
     };
 
     const particles: Particle[] = [];
 
     const init = () => {
+      const { width, height } = getCanvasBounds();
       particles.length = 0;
-      // Use the Class defined outside
-      const density = Math.floor((canvas.width * canvas.height) / 15000);
+      const densityLimit = width < 768 ? 42 : 78;
+      const density = Math.min(densityLimit, Math.floor((width * height) / 52000));
       for (let i = 0; i < density; i++) {
-        particles.push(new XOParticle(canvas.width, canvas.height));
+        particles.push(new XOParticle(width, height));
+      }
+    };
+
+    const drawConnections = () => {
+      if (sizeRef.current.width < 768) return;
+
+      for (let i = 0; i < particles.length; i++) {
+        for (let j = i + 1; j < particles.length; j++) {
+          const dx = particles[i].x - particles[j].x;
+          const dy = particles[i].y - particles[j].y;
+          const distance = Math.sqrt(dx * dx + dy * dy);
+
+          if (distance < 118) {
+            ctx.save();
+            ctx.globalAlpha = (1 - distance / 118) * 0.11;
+            ctx.strokeStyle = particles[i].char === particles[j].char ? '#39D3FF' : '#F9B44A';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(particles[i].x, particles[i].y);
+            ctx.lineTo(particles[j].x, particles[j].y);
+            ctx.stroke();
+            ctx.restore();
+          }
+        }
       }
     };
 
     const animate = () => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      const { width, height } = sizeRef.current;
+
+      ctx.clearRect(0, 0, width, height);
+      drawConnections();
       particles.forEach((p) => {
-        p.update(canvas.width, canvas.height);
+        if (!reducedMotion) {
+          p.update(width, height);
+        }
         p.draw(ctx);
       });
-      rafRef.current = requestAnimationFrame(animate);
+
+      if (!reducedMotion && !document.hidden) {
+        rafRef.current = requestAnimationFrame(animate);
+      } else {
+        rafRef.current = null;
+      }
     };
 
-    window.addEventListener('resize', () => {
+    const handleResize = () => {
+      if (rafRef.current) {
+        cancelAnimationFrame(rafRef.current);
+      }
       setCanvasSize();
       init();
-    });
+      animate();
+    };
+
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        if (rafRef.current) {
+          cancelAnimationFrame(rafRef.current);
+          rafRef.current = null;
+        }
+        return;
+      }
+
+      if (!reducedMotion && !rafRef.current) {
+        animate();
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+    window.visualViewport?.addEventListener('resize', handleResize);
+    document.addEventListener('visibilitychange', handleVisibilityChange);
 
     setCanvasSize();
     init();
     animate();
 
     return () => {
-      window.removeEventListener('resize', setCanvasSize);
+      window.removeEventListener('resize', handleResize);
+      window.visualViewport?.removeEventListener('resize', handleResize);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
     };
   }, []);
@@ -126,7 +197,8 @@ export function XOCanvas() {
   return (
     <canvas
       ref={canvasRef}
-      className="fixed inset-0 w-full h-full -z-10 pointer-events-none opacity-40"
+      aria-hidden="true"
+      className="fixed inset-0 z-0 pointer-events-none opacity-55"
     />
   );
 }
