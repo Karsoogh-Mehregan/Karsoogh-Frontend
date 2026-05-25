@@ -4,7 +4,7 @@ import {
   AboutSection,
   ChallengeSection,
   FAQSection,
-  GallerySection,
+  // GallerySection,
   HeroSection,
   TeamSection,
   TimelineSection,
@@ -21,7 +21,7 @@ export function Home() {
         <AboutSection />
         <TimelineSection />
         <FAQSection />
-        <GallerySection />
+        {/* <GallerySection /> */}
         <TeamSection />
         <ChallengeSection />
       </main>

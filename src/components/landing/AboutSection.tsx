@@ -23,22 +23,14 @@ export function AboutSection() {
           </p>
         </div>
 
-        <div className="lab-card overflow-hidden">
+        <div className="flex items-center justify-center">
           <img
             src={landingAssets.poster}
-            alt="هویت بصری تعاملی کارسوق"
-            className="h-64 w-full object-cover opacity-90"
+            alt="پوستر رویداد"
+            className="w-full rounded-3xl object-contain opacity-90"
             loading="lazy"
             decoding="async"
-            width={520}
-            height={256}
           />
-          <div className="p-5">
-            <p className="text-sm font-black text-white">ثبت‌نام دوره جدید</p>
-            <p className="mt-2 text-sm leading-7 text-slate-300">
-              تاریخ جدید ثبت‌نام اطلاع‌رسانی خواهد شد.
-            </p>
-          </div>
         </div>
       </div>
     </section>

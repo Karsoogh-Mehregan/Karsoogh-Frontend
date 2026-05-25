@@ -56,17 +56,24 @@ export function TeamSection() {
         aria-label="اعضای کادر برگزاری"
       >
         {teamMembers.map((member) => (
-          <article key={member.fullName} className="lab-card overflow-hidden p-4">
-            <img
-              src={member.image}
-              alt={member.fullName}
-              className="h-56 w-full rounded-2xl object-cover object-top md:h-64"
-              loading="lazy"
-              decoding="async"
-              width={320}
-              height={256}
-            />
-            <h3 className="mt-4 text-lg font-black text-white">{member.fullName}</h3>
+          <article
+            key={member.fullName}
+            className="group lab-card overflow-hidden p-4 transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_20px_40px_-15px_rgba(34,211,238,0.15)]"
+          >
+            <div className="overflow-hidden rounded-2xl">
+              <img
+                src={member.image}
+                alt={member.fullName}
+                className="h-56 w-full object-cover object-top transition-transform duration-500 ease-out group-hover:scale-110 md:h-64"
+                loading="lazy"
+                decoding="async"
+                width={320}
+                height={256}
+              />
+            </div>
+            <h3 className="mt-4 text-lg font-black text-white transition-colors duration-300 group-hover:text-cyan-300">
+              {member.fullName}
+            </h3>
             <p className="mt-2 text-sm font-bold text-cyan-100/80">{member.role}</p>
           </article>
         ))}

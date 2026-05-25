@@ -12,7 +12,7 @@ const NavBarItems: NavbarItemData[] = [
   { content: 'خانه', href: '#Home' },
   { content: 'درباره', href: '#About' },
   { content: 'پرسش و پاسخ', href: '#FAQ' },
-  { content: 'گالری تصاویر', href: '#Gallery' },
+  // { content: 'گالری تصاویر', href: '#Gallery' },
   { content: 'کادر برگزاری', href: '#Team' },
   { content: 'انتقاد و پیشنهاد', href: '#Comment' },
   { content: 'چالش هفتگی', href: '#Challenge' },

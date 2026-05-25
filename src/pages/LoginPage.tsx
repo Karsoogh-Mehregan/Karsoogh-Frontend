@@ -76,9 +76,9 @@ export default function LoginPage() {
               <LockKeyhole size={15} aria-hidden="true" />
               ورود امن
             </span>
-            <h1 className="mt-5 text-3xl font-black text-white">ورود به Karsoogh</h1>
+            <h1 className="mt-5 text-3xl font-black text-white">ورود به کارسوق</h1>
             <p className="mt-3 text-sm leading-7 text-slate-300">
-              برای مشاهده پنل و اطلاعات حساب، نام کاربری و رمز عبور خود را وارد کنید.
+              برای ورود نام کاربری و رمز عبور خود را وارد کنید.
             </p>
           </div>
 

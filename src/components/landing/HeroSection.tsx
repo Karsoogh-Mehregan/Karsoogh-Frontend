@@ -59,32 +59,30 @@ export function HeroSection() {
         initial={{ scale: 0.94, y: 18 }}
         animate={{ scale: 1, y: 0 }}
         transition={{ duration: 0.75, delay: 0.12, ease: 'easeOut' }}
-        className="relative transform-gpu"
+        className="relative flex transform-gpu items-center justify-center p-8 text-center"
       >
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.6, delay: 0.14, ease: 'easeOut' }}
-          className="pointer-events-none absolute -inset-8 z-0 rounded-[3rem] bg-cyan-300/10 blur-3xl"
+          className="pointer-events-none absolute -inset-6 z-0 rounded-full bg-cyan-500/10 blur-3xl sm:-inset-16"
         />
-        <div className="lab-card relative z-10 overflow-hidden p-5 sm:p-6">
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.55, delay: 0.22, ease: 'easeOut' }}
-            className="relative grid min-h-80 place-items-center overflow-hidden rounded-3xl border border-white/10 bg-slate-950/45 p-8 sm:min-h-[28rem]"
-          >
-            <div className="pointer-events-none absolute -left-16 -top-16 h-44 w-44 rounded-full bg-cyan-300/10 blur-2xl" />
-            <div className="pointer-events-none absolute -bottom-20 right-8 h-48 w-48 rounded-full bg-amber-300/10 blur-3xl" />
-            <img
-              src={landingAssets.bigLogo}
-              alt="نشان کارسوق ریاضی مهرگان"
-              className="relative mx-auto max-h-72 w-full object-contain drop-shadow-[0_22px_52px_rgba(57,211,255,0.18)] sm:max-h-80"
-              loading="eager"
-              decoding="async"
-            />
-          </motion.div>
-        </div>
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.55, delay: 0.22, ease: 'easeOut' }}
+          className="relative z-10 w-full"
+        >
+          <div className="pointer-events-none absolute inset-x-0 -top-16 mx-auto h-44 w-1/2 rounded-full bg-cyan-300/10 blur-3xl" />
+          <div className="pointer-events-none absolute inset-x-0 -bottom-16 mx-auto h-44 w-1/2 rounded-full bg-amber-400/5 blur-3xl" />
+          <img
+            src={landingAssets.bigLogo}
+            alt="نشان کارسوق ریاضی مهرگان"
+            className="relative mx-auto max-h-[22rem] w-full object-contain drop-shadow-[0_20px_60px_rgba(30,180,255,0.25)] sm:max-h-[30rem]"
+            loading="eager"
+            decoding="async"
+          />
+        </motion.div>
       </motion.div>
     </section>
   );
