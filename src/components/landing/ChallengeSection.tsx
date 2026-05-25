@@ -1,4 +1,5 @@
-import { Trophy } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { Trophy, ArrowLeft } from 'lucide-react';
 import { landingAssets } from './landingData';
 
 export function ChallengeSection() {
@@ -16,22 +17,26 @@ export function ChallengeSection() {
             height={420}
           />
         </div>
-        <div className="lab-card p-6 md:p-8">
-          <span className="lab-kicker">
-            <Trophy size={15} aria-hidden="true" />
-            چالش هفتگی
-          </span>
-          <h2 className="mt-5 text-3xl font-black text-white md:text-4xl">
-            مسئله‌های کوتاه، نگاه‌های تازه
-          </h2>
-          <p className="mt-5 text-sm leading-8 text-slate-300 md:text-base">
-            چالش هفتگی در سایت قدیمی مسیر جداگانه‌ای برای دریافت پاسخ داشت. در نسخه جدید، این بخش
-            فعلاً به شکل معرفی و فراخوان نمایش داده می‌شود تا بعد از آماده شدن API جدید، ارسال پاسخ
-            به همین تجربه اضافه شود.
-          </p>
-          <button type="button" className="lab-button-secondary mt-7" disabled>
-            چالش فعال به‌زودی اعلام می‌شود
-          </button>
+        <div className="lab-card p-6 md:p-8 flex flex-col justify-center">
+          <div>
+            <span className="lab-kicker">
+              <Trophy size={15} aria-hidden="true" />
+              چالش هفتگی
+            </span>
+            <h2 className="mt-5 text-3xl font-black text-white md:text-4xl">
+              مسئله‌های کوتاه، نگاه‌های تازه
+            </h2>
+            <p className="mt-5 text-sm leading-8 text-slate-300 md:text-base">
+              منتظر پاسخ‌های خلاقانه و جذاب شما به چالش‌های هفتگی هستیم. برای مشاهده صورت سوال
+              جدیدترین مسئله و ارسال پاسخِ خود وارد صفحه چالش شوید.
+            </p>
+          </div>
+          <div className="mt-8 flex items-center">
+            <Link to="/challenge" className="lab-button-primary inline-flex items-center gap-2">
+              مشاهده و شرکت در چالش
+              <ArrowLeft size={18} aria-hidden="true" />
+            </Link>
+          </div>
         </div>
       </div>
     </section>

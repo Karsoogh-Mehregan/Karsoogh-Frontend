@@ -11,6 +11,14 @@ const router = createBrowserRouter([
   },
 
   {
+    path: '/challenge',
+    lazy: async () => {
+      const { Challenge } = await import('@/pages/Challenge');
+      return { Component: Challenge };
+    },
+  },
+
+  {
     path: '/login',
     lazy: async () => {
       const { default: LoginPage } = await import('@/pages/LoginPage');

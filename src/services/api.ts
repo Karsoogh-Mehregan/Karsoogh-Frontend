@@ -157,6 +157,17 @@ class ApiClient {
     return this.handleResponse<T>(response, endpoint, options);
   }
 
+  async postFormData<T>(endpoint: string, formData: FormData): Promise<T> {
+    const headers = new Headers();
+    const csrfToken = this.getCookie('csrftoken');
+    if (csrfToken) {
+      headers.set('X-CSRFToken', csrfToken);
+    }
+    const options: RequestInit = { method: 'POST', body: formData, headers };
+    const response = await this.request(endpoint, options);
+    return this.handleResponse<T>(response, endpoint, options);
+  }
+
   async put<T>(endpoint: string, data?: unknown): Promise<T> {
     const options: RequestInit = { method: 'PUT', body: data ? JSON.stringify(data) : undefined };
     const response = await this.request(endpoint, options);
