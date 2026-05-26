@@ -1,18 +1,28 @@
+import Navbar from '@/components/Navbar';
 import { XOCanvas } from '@/components/XOCanvas';
+import {
+  AboutSection,
+  FAQSection,
+  // GallerySection,
+  HeroSection,
+  TeamSection,
+  TimelineSection,
+} from '@/components/landing';
 
 export function Home() {
   return (
-    <div
-      className="container mx-auto px-4 flex flex-col items-center justify-start pt-28 md:pt-36 pb-20 min-h-screen text-center relative text-primary-columbia overflow-hidden"
-      dir="rtl"
-      lang="fa"
-    >
+    <div className="lab-shell" dir="rtl" lang="fa">
+      <Navbar />
       <XOCanvas />
-      <div className="relative z-10 flex flex-col items-center w-full">
-        <h1 className="text-4xl sm:text-5xl md:text-6xl font-orbitron font-bold tracking-widest animate-glow select-none drop-shadow-lg">
-          Karsoogh
-        </h1>
-      </div>
+
+      <main className="lab-container relative pt-32 md:pt-40">
+        <HeroSection />
+        <AboutSection />
+        <TimelineSection />
+        <FAQSection />
+        {/* <GallerySection /> */}
+        <TeamSection />
+      </main>
     </div>
   );
 }

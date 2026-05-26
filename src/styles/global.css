@@ -1,14 +1,289 @@
+@font-face {
+  font-family: 'Vazirmatn';
+  src: url('../assets/fonts/vazirmatn-arabic-400-normal.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF, U+200C-200F, U+FB50-FDFF, U+FE70-FEFF;
+}
+
+@font-face {
+  font-family: 'Vazirmatn';
+  src: url('../assets/fonts/vazirmatn-arabic-500-normal.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF, U+200C-200F, U+FB50-FDFF, U+FE70-FEFF;
+}
+
+@font-face {
+  font-family: 'Vazirmatn';
+  src: url('../assets/fonts/vazirmatn-arabic-600-normal.woff2') format('woff2');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF, U+200C-200F, U+FB50-FDFF, U+FE70-FEFF;
+}
+
+@font-face {
+  font-family: 'Vazirmatn';
+  src: url('../assets/fonts/vazirmatn-arabic-700-normal.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF, U+200C-200F, U+FB50-FDFF, U+FE70-FEFF;
+}
+
+@font-face {
+  font-family: 'Vazirmatn';
+  src: url('../assets/fonts/vazirmatn-arabic-800-normal.woff2') format('woff2');
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF, U+200C-200F, U+FB50-FDFF, U+FE70-FEFF;
+}
+
+@font-face {
+  font-family: 'Vazirmatn';
+  src: url('../assets/fonts/vazirmatn-arabic-900-normal.woff2') format('woff2');
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF, U+200C-200F, U+FB50-FDFF, U+FE70-FEFF;
+}
+
+@font-face {
+  font-family: 'Vazirmatn';
+  src: url('../assets/fonts/vazirmatn-latin-400-normal.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0000-00FF;
+}
+
+@font-face {
+  font-family: 'Vazirmatn';
+  src: url('../assets/fonts/vazirmatn-latin-500-normal.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0000-00FF;
+}
+
+@font-face {
+  font-family: 'Vazirmatn';
+  src: url('../assets/fonts/vazirmatn-latin-600-normal.woff2') format('woff2');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0000-00FF;
+}
+
+@font-face {
+  font-family: 'Vazirmatn';
+  src: url('../assets/fonts/vazirmatn-latin-700-normal.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0000-00FF;
+}
+
+@font-face {
+  font-family: 'Vazirmatn';
+  src: url('../assets/fonts/vazirmatn-latin-800-normal.woff2') format('woff2');
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0000-00FF;
+}
+
+@font-face {
+  font-family: 'Vazirmatn';
+  src: url('../assets/fonts/vazirmatn-latin-900-normal.woff2') format('woff2');
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0000-00FF;
+}
+
+@font-face {
+  font-family: 'Estedad';
+  src: url('../assets/fonts/Estedad-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Estedad';
+  src: url('../assets/fonts/Estedad-Bold.woff2') format('woff2');
+  font-weight: 700 900;
+  font-style: normal;
+  font-display: swap;
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --font-primary: 'Estedad', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-secondary: 'Vazirmatn', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --c-bg: #060913;
+  --c-bg-2: #0b1221;
+  --c-surface: 10 17 31;
+  --c-surface-strong: 16 25 44;
+  --c-border: 148 163 184;
+  --c-text: #eef6ff;
+  --c-muted: #9fb0c7;
+  --c-cyan: #39d3ff;
+  --c-amber: #f9b44a;
+  --c-rose: #ff5d7d;
+  --c-green: #6ee7b7;
+  --shadow-lab: 0 24px 80px rgba(0, 0, 0, 0.42);
+}
 
-* { box-sizing: border-box; }
-html, body, #root { height: 100%; margin: 0; padding: 0; font-family: system-ui, Arial, sans-serif; }
-body { background: #0d1117; color: #e6edf3; -webkit-font-smoothing: antialiased; }
-a { color: #79c0ff; }
-button { cursor: pointer; font-size: 1rem; padding: 0.6rem 1rem; border-radius: 6px; border: 1px solid #30363d; background:#21262d; color:#fff; }
-button:hover { background:#30363d; }
-.app-container { max-width: 860px; margin: 0 auto; padding: 2rem; }
-header h1 { margin-top: 0; }
-footer { margin-top: 3rem; opacity: 0.7; }
+body {
+  @apply font-sans;
+  font-family: var(--font-primary);
+}
+
+* {
+  box-sizing: border-box;
+}
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-primary);
+}
+html {
+  scroll-behavior: smooth;
+}
+body {
+  min-width: 320px;
+  background: var(--c-bg);
+  color: var(--c-text);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: geometricPrecision;
+}
+a {
+  color: inherit;
+  text-decoration: none;
+}
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+button {
+  cursor: pointer;
+}
+button:disabled {
+  cursor: not-allowed;
+}
+::selection {
+  background: rgba(57, 211, 255, 0.28);
+  color: #ffffff;
+}
+
+@layer base {
+  :focus-visible {
+    outline: 2px solid var(--c-amber);
+    outline-offset: 4px;
+  }
+}
+
+@layer components {
+  .lab-shell {
+    @apply relative isolate min-h-screen overflow-hidden text-slate-100;
+    background:
+      radial-gradient(circle at 18% 10%, rgba(57, 211, 255, 0.14), transparent 32rem),
+      radial-gradient(circle at 82% 16%, rgba(249, 180, 74, 0.09), transparent 30rem),
+      linear-gradient(145deg, var(--c-bg), var(--c-bg-2) 58%, #05070d);
+  }
+
+  .lab-shell::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    background-image:
+      linear-gradient(rgba(255, 255, 255, 0.045) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.045) 1px, transparent 1px);
+    background-size: 72px 72px;
+    mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.8), transparent 78%);
+  }
+
+  .lab-shell::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    background: linear-gradient(120deg, transparent, rgba(57, 211, 255, 0.05), transparent 48%);
+  }
+
+  .lab-container {
+    @apply relative z-10 mx-auto w-full max-w-7xl px-5 sm:px-6 lg:px-8;
+  }
+
+  .lab-panel {
+    border: 1px solid rgba(var(--c-border), 0.16);
+    background:
+      linear-gradient(145deg, rgba(var(--c-surface-strong), 0.78), rgba(var(--c-surface), 0.62)),
+      linear-gradient(180deg, rgba(255, 255, 255, 0.07), transparent);
+    box-shadow: var(--shadow-lab);
+    backdrop-filter: blur(22px);
+    -webkit-backdrop-filter: blur(22px);
+  }
+
+  .lab-card {
+    @apply rounded-[1.25rem];
+    border: 1px solid rgba(var(--c-border), 0.16);
+    background:
+      linear-gradient(145deg, rgba(var(--c-surface-strong), 0.78), rgba(var(--c-surface), 0.62)),
+      linear-gradient(180deg, rgba(255, 255, 255, 0.07), transparent);
+    box-shadow: var(--shadow-lab);
+    backdrop-filter: blur(22px);
+    -webkit-backdrop-filter: blur(22px);
+  }
+
+  @media (max-width: 767px) {
+    .lab-card {
+      background:
+        linear-gradient(145deg, rgba(var(--c-surface-strong), 0.92), rgba(var(--c-surface), 0.86)),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.07), transparent);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+  }
+
+  .lab-button {
+    @apply inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border px-5 py-3 text-sm font-bold transition duration-200 active:scale-[0.98] disabled:opacity-55;
+  }
+
+  .lab-button-primary {
+    @apply inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-cyan-300/30 bg-cyan-300 px-5 py-3 text-sm font-bold text-slate-950 shadow-[0_18px_45px_rgba(57,211,255,0.22)] transition duration-200 hover:bg-cyan-200 active:scale-[0.98] disabled:opacity-55;
+  }
+
+  .lab-button-secondary {
+    @apply inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-white/[0.14] bg-white/[0.06] px-5 py-3 text-sm font-bold text-white transition duration-200 hover:border-white/25 hover:bg-white/[0.1] active:scale-[0.98] disabled:opacity-55;
+  }
+
+  .lab-button-ghost {
+    @apply inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-transparent bg-transparent px-5 py-3 text-sm font-bold text-slate-200 transition duration-200 hover:bg-white/[0.07] active:scale-[0.98] disabled:opacity-55;
+  }
+
+  .lab-input {
+    @apply w-full rounded-2xl border border-white/10 bg-slate-950/50 px-4 py-3 text-sm text-white shadow-inner shadow-black/20 transition placeholder:text-slate-500 focus:border-cyan-300/60 focus:bg-slate-950/70 focus:outline-none focus:ring-4 focus:ring-cyan-300/10;
+  }
+
+  .lab-kicker {
+    @apply inline-flex items-center gap-2 rounded-full border border-cyan-200/20 bg-cyan-200/10 px-3 py-1 text-xs font-bold text-cyan-100;
+  }
+}

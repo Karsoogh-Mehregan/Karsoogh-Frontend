@@ -1,0 +1,166 @@
+import React, { useState } from 'react';
+import { FlaskConical, LogIn, Menu, Sparkles, X } from 'lucide-react';
+import logoIcon from '@/assets/Karsoogh.ico';
+import { Link } from 'react-router-dom';
+
+type NavbarItemData = {
+  content: string;
+  href: string;
+};
+
+const NavBarItems: NavbarItemData[] = [
+  { content: 'خانه', href: '/#Home' },
+  { content: 'درباره', href: '/#About' },
+  { content: 'پرسش و پاسخ', href: '/#FAQ' },
+  // { content: 'گالری تصاویر', href: '#Gallery' },
+  { content: 'کادر برگزاری', href: '/#Team' },
+  { content: 'چالش هفتگی', href: '/challenge' },
+];
+
+const NavItems = () => {
+  return (
+    <div className="hidden h-full items-center gap-1 lg:flex">
+      {NavBarItems.map(({ content, href }, index) => (
+        <a
+          key={index}
+          href={href}
+          className="relative flex h-10 items-center whitespace-nowrap rounded-xl px-3 text-xs font-bold text-slate-300 transition-colors hover:bg-white/[0.06] hover:text-white xl:text-sm"
+        >
+          {content}
+        </a>
+      ))}
+    </div>
+  );
+};
+
+const Logo = () => {
+  return (
+    <Link to="/" className="group flex items-center gap-3">
+      <img
+        src={logoIcon}
+        alt="Karsoogh Logo"
+        className="h-10 w-10 object-contain transition-transform group-hover:scale-105 md:h-12 md:w-12"
+      />
+      <span className="hidden text-right leading-tight sm:block">
+        <span className="block text-sm font-black tracking-wide text-white">Karsoogh</span>
+        <span className="block text-[11px] font-bold text-cyan-100/70">ریاضی مهرگان</span>
+      </span>
+    </Link>
+  );
+};
+
+const LoginButton = () => {
+  return (
+    <Link to="/login" className="lab-button-secondary min-h-10 px-4 py-2 text-xs md:text-sm">
+      <LogIn size={16} aria-hidden="true" />
+      ورود
+    </Link>
+  );
+};
+
+const SignUpButton = () => {
+  return (
+    <button
+      type="button"
+      className="lab-button-primary hidden min-h-10 px-4 py-2 text-xs md:inline-flex md:text-sm"
+      disabled
+      title="ثبت‌نام به‌زودی فعال می‌شود"
+    >
+      <Sparkles size={16} aria-hidden="true" />
+      ثبت‌نام به‌زودی
+    </button>
+  );
+};
+
+const Hamburger = ({
+  isOpen,
+  setIsOpen,
+}: {
+  isOpen: boolean;
+  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}) => {
+  return (
+    <button
+      type="button"
+      className="lab-button-ghost min-h-10 px-3 py-2 lg:hidden"
+      onClick={() => setIsOpen(!isOpen)}
+      aria-label={isOpen ? 'بستن منو' : 'باز کردن منو'}
+      aria-expanded={isOpen}
+    >
+      {isOpen ? <X size={28} /> : <Menu size={28} />}
+    </button>
+  );
+};
+
+const MobileMenu = ({
+  isOpen,
+  setIsOpen,
+}: {
+  isOpen: boolean;
+  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}) => {
+  if (!isOpen) return null;
+
+  return (
+    <div className="absolute left-0 top-[calc(100%+0.6rem)] w-full transition-all duration-300 ease-in-out lg:hidden">
+      <div className="max-h-[calc(100vh-6.5rem)] overflow-y-auto rounded-3xl border border-white/10 bg-[#070b14] p-4 shadow-2xl shadow-black/50 backdrop-blur-xl">
+        <ul className="flex flex-col gap-2 text-base">
+          {NavBarItems.map((item, index) => (
+            <li key={index}>
+              <Link
+                onClick={() => setIsOpen(false)}
+                to={item.href}
+                className="flex min-h-12 items-center rounded-2xl px-4 font-bold text-slate-200 transition-colors hover:bg-white/[0.07] hover:text-white"
+              >
+                {item.content}
+              </Link>
+            </li>
+          ))}
+
+          <li className="pt-2">
+            <button
+              type="button"
+              className="lab-button-primary w-full"
+              disabled
+              title="ثبت‌نام به‌زودی فعال می‌شود"
+            >
+              تاریخ ثبت‌نام به‌زودی
+            </button>
+          </li>
+        </ul>
+      </div>
+    </div>
+  );
+};
+const Navbar: React.FC = () => {
+  const [isOpen, setIsOpen] = useState(false);
+
+  return (
+    <nav
+      className="fixed inset-x-3 top-3 z-50 flex h-16 items-center rounded-3xl border border-white/10 bg-[#070b14] shadow-2xl shadow-black/35 backdrop-blur-2xl md:inset-x-4 lg:inset-x-0 lg:top-0 lg:h-20 lg:rounded-none lg:border-x-0 lg:border-t-0 lg:bg-slate-950/78"
+      dir="rtl"
+      aria-label="ناوبری اصلی"
+    >
+      <div className="lab-container flex h-full items-center justify-between">
+        <div className="flex h-full items-center gap-5 md:gap-8">
+          <Logo />
+          <NavItems />
+        </div>
+
+        <div className="flex items-center gap-2 md:gap-3">
+          <span className="hidden items-center gap-2 rounded-full border border-amber-200/20 bg-amber-200/10 px-3 py-2 text-xs font-bold text-amber-100 lg:inline-flex">
+            <FlaskConical size={14} aria-hidden="true" />
+            دوره ۲۶
+          </span>
+          <LoginButton />
+          <SignUpButton />
+          <Hamburger isOpen={isOpen} setIsOpen={setIsOpen} />
+        </div>
+      </div>
+
+      <MobileMenu isOpen={isOpen} setIsOpen={setIsOpen} />
+    </nav>
+  );
+};
+
+export default Navbar;
