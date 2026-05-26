@@ -42,36 +42,21 @@ describe('landing and auth flows', () => {
     ).toBeInTheDocument();
   });
 
-  it('renders the main old-site landing sections', () => {
+  it('renders the main landing sections', () => {
     render(
       <MemoryRouter>
         <Home />
       </MemoryRouter>,
     );
 
+    expect(
+      screen.getByRole('heading', { level: 2, name: 'کارسوق؟ کارسوق کیه؟' }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole('heading', { level: 2, name: 'از ثبت‌نام تا تجربه حضوری' }),
+    ).toBeInTheDocument();
     expect(screen.getByRole('heading', { level: 2, name: 'سوالات متداول' })).toBeInTheDocument();
-    expect(screen.getByRole('heading', { level: 2, name: 'گالری تصاویر' })).toBeInTheDocument();
     expect(screen.getByRole('heading', { level: 2, name: 'تیم دوره ۲۶' })).toBeInTheDocument();
-    expect(
-      screen.getByRole('heading', { level: 2, name: 'صدای شرکت‌کننده‌ها مهم است' }),
-    ).toBeInTheDocument();
-    expect(
-      screen.getByRole('button', { name: 'چالش فعال به‌زودی اعلام می‌شود' }),
-    ).toBeInTheDocument();
-  });
-
-  it('keeps the comment navigation target mounted on the landing page', () => {
-    render(
-      <MemoryRouter>
-        <Home />
-      </MemoryRouter>,
-    );
-
-    expect(screen.getByRole('link', { name: 'انتقاد و پیشنهاد' })).toHaveAttribute(
-      'href',
-      '#Comment',
-    );
-    expect(document.getElementById('Comment')).toBeInTheDocument();
   });
 
   it('renders the login form fields and submit control', () => {
