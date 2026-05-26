@@ -12,6 +12,6 @@ export const challengeService = {
     return apiClient.get<ChallengeData>('/challenges/latest/');
   },
   submitChallenge: (slug: string, data: FormData) => {
-    return apiClient.postFormData<any>(`/challenges/${slug}/submit/`, data);
+    return apiClient.postFormData<unknown>(`/challenges/${slug}/submit/`, data);
   },
 };

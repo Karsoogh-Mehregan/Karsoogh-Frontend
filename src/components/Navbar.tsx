@@ -9,13 +9,12 @@ type NavbarItemData = {
 };
 
 const NavBarItems: NavbarItemData[] = [
-  { content: 'خانه', href: '#Home' },
-  { content: 'درباره', href: '#About' },
-  { content: 'پرسش و پاسخ', href: '#FAQ' },
+  { content: 'خانه', href: '/#Home' },
+  { content: 'درباره', href: '/#About' },
+  { content: 'پرسش و پاسخ', href: '/#FAQ' },
   // { content: 'گالری تصاویر', href: '#Gallery' },
-  { content: 'کادر برگزاری', href: '#Team' },
-  { content: 'انتقاد و پیشنهاد', href: '#Comment' },
-  { content: 'چالش هفتگی', href: '#Challenge' },
+  { content: 'کادر برگزاری', href: '/#Team' },
+  { content: 'چالش هفتگی', href: '/challenge' },
 ];
 
 const NavItems = () => {
@@ -108,13 +107,13 @@ const MobileMenu = ({
         <ul className="flex flex-col gap-2 text-base">
           {NavBarItems.map((item, index) => (
             <li key={index}>
-              <a
+              <Link
                 onClick={() => setIsOpen(false)}
-                href={item.href}
+                to={item.href}
                 className="flex min-h-12 items-center rounded-2xl px-4 font-bold text-slate-200 transition-colors hover:bg-white/[0.07] hover:text-white"
               >
                 {item.content}
-              </a>
+              </Link>
             </li>
           ))}
 

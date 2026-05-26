@@ -2,7 +2,6 @@ import Navbar from '@/components/Navbar';
 import { XOCanvas } from '@/components/XOCanvas';
 import {
   AboutSection,
-  ChallengeSection,
   FAQSection,
   // GallerySection,
   HeroSection,
@@ -23,7 +22,6 @@ export function Home() {
         <FAQSection />
         {/* <GallerySection /> */}
         <TeamSection />
-        <ChallengeSection />
       </main>
     </div>
   );

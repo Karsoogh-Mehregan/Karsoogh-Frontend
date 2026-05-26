@@ -123,7 +123,7 @@ class ApiClient {
         data: errorData,
       });
 
-      let errorMessage = errorData.detail || errorData.message;
+      let errorMessage = errorData.detail || errorData.message || errorData.error;
 
       if (!errorMessage) {
         if (response.status === 500) {

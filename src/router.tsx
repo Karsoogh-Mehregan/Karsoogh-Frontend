@@ -11,7 +11,7 @@ const router = createBrowserRouter([
   },
 
   {
-    path: '/challenge',
+    path: '/challenge/',
     lazy: async () => {
       const { Challenge } = await import('@/pages/Challenge');
       return { Component: Challenge };

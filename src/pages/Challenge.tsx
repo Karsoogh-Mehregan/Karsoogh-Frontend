@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import toast, { Toaster } from 'react-hot-toast';
-import Navbar from '../components/Navbar';
-import { challengeService } from '../services/challengeService';
+import toast from 'react-hot-toast';
+import Navbar from '@/components/Navbar';
+import { challengeService } from '@/services/challengeService';
 
 export function Challenge() {
   const { slug } = useParams();
@@ -35,6 +35,8 @@ export function Challenge() {
         })
         .catch((error) => {
           console.error('Error fetching latest challenge:', error);
+          setPageTitle('');
+          setCurrentSlug(null);
           toast.remove();
           toast.error(error.message || 'خطا در دریافت چالش فعال');
         });
@@ -109,9 +111,10 @@ export function Challenge() {
         message: '',
       });
       toast.success('پاسخ شما ثبت شد');
-    } catch (error: any) {
-      console.error(error);
-      toast.error(error.message || 'خطا در ارسال پاسخ');
+    } catch (error) {
+      const err = error as Error;
+      console.error(err);
+      toast.error(err.message || 'خطا در ارسال پاسخ');
     } finally {
       setLoading(false);
     }
@@ -130,7 +133,6 @@ export function Challenge() {
       dir="rtl"
     >
       <Navbar />
-      <Toaster position="bottom-center" />
       <main className="mx-auto max-w-4xl px-4 py-24 sm:px-6">
         <h1 className="text-center text-3xl font-black md:text-5xl">
           {pageTitle ? `چالش ${pageTitle}` : 'چالشی فعال نیست!'}
