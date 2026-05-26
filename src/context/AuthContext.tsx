@@ -31,7 +31,31 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   useEffect(() => {
-    checkAuth();
+    let isMounted = true;
+
+    const loadProfile = async () => {
+      try {
+        const user = await authService.getProfile();
+        if (isMounted) {
+          setUser(user);
+        }
+      } catch (error: unknown) {
+        console.error(error);
+        if (isMounted) {
+          setUser(null);
+        }
+      } finally {
+        if (isMounted) {
+          setIsLoading(false);
+        }
+      }
+    };
+
+    void loadProfile();
+
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   const login = async (user: User) => {

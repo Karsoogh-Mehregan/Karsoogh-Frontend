@@ -6,7 +6,8 @@ import { challengeService } from '@/services/challengeService';
 
 export function Challenge() {
   const { slug } = useParams();
-  const [currentSlug, setCurrentSlug] = useState<string | null>(slug || null);
+  const [latestChallengeSlug, setLatestChallengeSlug] = useState<string | null>(null);
+  const currentSlug = slug ?? latestChallengeSlug;
   const [pageTitle, setPageTitle] = useState('');
   const [description, setDescription] = useState('');
   const [regex, setRegex] = useState('');
@@ -23,12 +24,12 @@ export function Challenge() {
 
   useEffect(() => {
     if (slug) {
-      setCurrentSlug(slug);
+      return;
     } else {
       challengeService
         .getLatestChallenge()
         .then((latestChallenge) => {
-          setCurrentSlug(latestChallenge.slug);
+          setLatestChallengeSlug(latestChallenge.slug);
           setPageTitle(latestChallenge.title);
           setDescription(latestChallenge.description);
           if (latestChallenge.regex) setRegex(latestChallenge.regex);
@@ -36,7 +37,7 @@ export function Challenge() {
         .catch((error) => {
           console.error('Error fetching latest challenge:', error);
           setPageTitle('');
-          setCurrentSlug(null);
+          setLatestChallengeSlug(null);
           toast.remove();
           toast.error(error.message || 'خطا در دریافت چالش فعال');
         });
