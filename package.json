@@ -18,6 +18,8 @@
     "prepare": "husky install"
   },
   "dependencies": {
+    "@mdx-js/react": "^3.1.1",
+    "@mdx-js/rollup": "^3.1.1",
     "framer-motion": "^12.23.26",
     "katex": "^0.16.27",
     "lucide-react": "^0.562.0",
@@ -29,7 +31,10 @@
     "react-router-dom": "^7.11.0",
     "rehype-katex": "^7.0.1",
     "rehype-raw": "^7.0.0",
-    "remark-math": "^6.0.0"
+    "remark-frontmatter": "^5.0.0",
+    "remark-gfm": "^4.0.1",
+    "remark-math": "^6.0.0",
+    "remark-mdx-frontmatter": "^5.2.0"
   },
   "devDependencies": {
     "@commitlint/cli": "^20.2.0",

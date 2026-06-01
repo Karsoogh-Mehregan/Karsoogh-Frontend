@@ -26,6 +26,30 @@ const router = createBrowserRouter([
     },
   },
 
+  {
+    path: '/docs',
+    lazy: async () => {
+      const { default: DocsIndex } = await import('@/components/docs/DocsIndex');
+      return { Component: DocsIndex };
+    },
+  },
+
+  {
+    path: '/docs/:docName',
+    lazy: async () => {
+      const { default: DocViewer } = await import('@/components/docs/DocViewer');
+      return { Component: DocViewer };
+    },
+  },
+
+  {
+    path: '/docs/:docName/:tabName',
+    lazy: async () => {
+      const { default: DocViewer } = await import('@/components/docs/DocViewer');
+      return { Component: DocViewer };
+    },
+  },
+
   /* --- Protected Routes --- */
   {
     element: <ProtectedRoute />,
