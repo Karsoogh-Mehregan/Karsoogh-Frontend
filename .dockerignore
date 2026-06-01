@@ -1,0 +1,19 @@
+node_modules
+# dist/ is included when present (CI artifact); omitted locally if not built
+.git
+.env
+.env.*
+!.env.example
+coverage
+*.log
+.husky
+.vscode
+.idea
+.cursor
+agent-transcripts
+tests
+*.md
+!README.md
+*.pem
+*.key
+**/*.p12
