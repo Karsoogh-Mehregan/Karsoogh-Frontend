@@ -21,13 +21,13 @@ const NavItems = () => {
   return (
     <div className="hidden h-full items-center gap-1 lg:flex">
       {NavBarItems.map(({ content, href }, index) => (
-        <a
+        <Link
           key={index}
-          href={href}
+          to={href}
           className="relative flex h-10 items-center whitespace-nowrap rounded-xl px-3 text-xs font-bold text-slate-300 transition-colors hover:bg-white/[0.06] hover:text-white xl:text-sm"
         >
           {content}
-        </a>
+        </Link>
       ))}
     </div>
   );

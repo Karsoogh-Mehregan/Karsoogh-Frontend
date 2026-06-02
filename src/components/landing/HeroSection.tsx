@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
 import { ArrowLeft, Atom } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { introPoints, landingAssets } from './landingData';
 
 export function HeroSection() {
@@ -29,10 +30,10 @@ export function HeroSection() {
         </p>
 
         <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-          <a href="#About" className="lab-button-primary">
+          <Link to="#About" className="lab-button-primary">
             کارسوق؟ کارسوق کیه؟
             <ArrowLeft size={18} aria-hidden="true" />
-          </a>
+          </Link>
           <button
             type="button"
             className="lab-button-secondary"
