@@ -1,0 +1,81 @@
+name: Docker (production)
+
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  workflow_dispatch:
+
+env:
+  REGISTRY: ghcr.io
+  REG_USERNAME: ${{ github.actor }}
+  REG_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
+  IMAGE_NAME: ${{ github.repository }}
+  PROD_ENV_FILE: |-
+    APP_ENV=production
+    VITE_API_BASE_URL=${{ vars.PROD_VITE_API_BASE_URL }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    concurrency:
+      group: docker-production-${{ github.ref }}
+      cancel-in-progress: true
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Validate production variables
+        if: github.event_name != 'pull_request'
+        run: |
+          if [ -z "${{ vars.PROD_VITE_API_BASE_URL }}" ]; then
+            echo "::error::Set repository variable PROD_VITE_API_BASE_URL (Settings → Secrets and variables → Actions → Variables)"
+            exit 1
+          fi
+
+      - name: Write .env.prod for image build
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            printf '%s\n' \
+              'APP_ENV=production' \
+              'VITE_API_BASE_URL=http://localhost:8000' \
+              > .env.prod
+          else
+            echo "$PROD_ENV_FILE" > .env.prod
+          fi
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to GitHub Container Registry
+        if: github.event_name != 'pull_request'
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ env.REG_USERNAME }}
+          password: ${{ env.REG_PASSWORD }}
+
+      - name: Extract Docker metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=raw,value=latest,enable=${{ github.ref == 'refs/heads/main' }}
+            type=raw,value=production,enable=${{ github.ref == 'refs/heads/main' }}
+            type=ref,event=tag
+            type=sha,prefix=production-,enable=${{ github.ref == 'refs/heads/main' }}
+
+      - name: Build and push image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: Dockerfile
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha,scope=frontend-production
+          cache-to: type=gha,mode=max,scope=frontend-production

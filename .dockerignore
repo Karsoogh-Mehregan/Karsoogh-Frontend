@@ -1,9 +1,9 @@
 node_modules
-# dist/ is included when present (CI artifact); omitted locally if not built
+dist
 .git
 .env
 .env.*
-!.env.example
+!.env.prod
 coverage
 *.log
 .husky
