@@ -72,10 +72,6 @@ export default function LoginPage() {
 
         <form onSubmit={handleSubmit} className="lab-card p-6 sm:p-8">
           <div className="mb-7">
-            <span className="lab-kicker">
-              <LockKeyhole size={15} aria-hidden="true" />
-              ورود امن
-            </span>
             <h1 className="mt-5 text-3xl font-black text-white">ورود به کارسوق</h1>
             <p className="mt-3 text-sm leading-7 text-slate-300">
               برای ورود نام کاربری و رمز عبور خود را وارد کنید.

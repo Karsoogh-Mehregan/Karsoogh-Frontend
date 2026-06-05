@@ -42,7 +42,7 @@ const Logo = () => {
         className="h-10 w-10 object-contain transition-transform group-hover:scale-105 md:h-12 md:w-12"
       />
       <span className="hidden text-right leading-tight sm:block">
-        <span className="block text-sm font-black tracking-wide text-white">Karsoogh</span>
+        <span className="block text-sm font-black tracking-wide text-white">کارسوق</span>
         <span className="block text-[11px] font-bold text-cyan-100/70">ریاضی مهرگان</span>
       </span>
     </Link>
