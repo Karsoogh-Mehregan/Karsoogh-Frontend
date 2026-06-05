@@ -13,12 +13,7 @@ export function TeamSection() {
 
   return (
     <section id="Team" className="scroll-mt-28 py-16">
-      <SectionHeader
-        eyebrow="کادر برگزاری"
-        title="تیم دوره ۲۶"
-        icon={UsersRound}
-        description="در موبایل ابتدا اعضای اصلی را می‌بینید و برای دیدن همه‌ی تیم می‌توانید فهرست را باز کنید."
-      />
+      <SectionHeader eyebrow="کادر برگزاری" title="تیم دوره ۲۶" icon={UsersRound} description="" />
 
       <div className="grid gap-3 md:hidden" aria-label="اعضای کادر برگزاری">
         {visibleMobileMembers.map((member) => (

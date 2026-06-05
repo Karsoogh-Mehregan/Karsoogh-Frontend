@@ -1,4 +1,5 @@
 /* eslint-disable react-refresh/only-export-components -- MDX element map, not route components */
+import { Link } from 'react-router-dom';
 import type { ComponentPropsWithoutRef } from 'react';
 import type { MDXComponents } from 'mdx/types';
 
@@ -40,14 +41,15 @@ function MdxImg({ alt = '', className = '', ...props }: ComponentPropsWithoutRef
   );
 }
 
-function MdxA({ children, className = '', ...props }: ComponentPropsWithoutRef<'a'>) {
+function MdxA({ children, className = '', href = '', ...props }: ComponentPropsWithoutRef<'a'>) {
   return (
-    <a
+    <Link
+      to={href}
       className={`font-semibold text-cyan-200 underline decoration-cyan-300/40 underline-offset-4 transition-colors duration-200 hover:text-cyan-100 hover:decoration-cyan-200 ${className}`}
       {...props}
     >
       {children}
-    </a>
+    </Link>
   );
 }
 

@@ -4,4 +4,5 @@ export const meta: DocMeta = {
   title: 'تست',
   description: 'توضیحات کلی این مستند در meta.ts',
   tabOrder: ['first', 'second'],
+  isVisible: false,
 };

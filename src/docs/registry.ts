@@ -41,6 +41,11 @@ function buildDocCache(): { allDocs: DocSummary[]; summaryBySlug: Map<string, Do
 
   for (const slug of slugs) {
     const meta = getDocMeta(slug);
+
+    if (!meta?.isVisible) {
+      continue;
+    }
+
     const prefix = `./${slug}/`;
     const tabIds = validMdxPaths
       .filter((path) => path.startsWith(prefix))

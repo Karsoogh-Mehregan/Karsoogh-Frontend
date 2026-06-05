@@ -1,10 +1,9 @@
 export type DocMeta = {
-  /** عنوان کل مستند (صفحه فهرست و هدر DocViewer) */
   title?: string;
   description?: string;
   tabOrder?: string[];
-  /** فقط وقتی در MDX frontmatter نیست */
   tabLabels?: Record<string, string>;
+  isVisible?: boolean;
 };
 
 export type DocSummary = {

@@ -15,19 +15,20 @@ const NavBarItems: NavbarItemData[] = [
   // { content: 'گالری تصاویر', href: '#Gallery' },
   { content: 'کادر برگزاری', href: '/#Team' },
   { content: 'چالش هفتگی', href: '/challenge' },
+  { content: 'مستندات', href: '/docs' },
 ];
 
 const NavItems = () => {
   return (
     <div className="hidden h-full items-center gap-1 lg:flex">
       {NavBarItems.map(({ content, href }, index) => (
-        <a
+        <Link
           key={index}
-          href={href}
+          to={href}
           className="relative flex h-10 items-center whitespace-nowrap rounded-xl px-3 text-xs font-bold text-slate-300 transition-colors hover:bg-white/[0.06] hover:text-white xl:text-sm"
         >
           {content}
-        </a>
+        </Link>
       ))}
     </div>
   );
@@ -42,7 +43,7 @@ const Logo = () => {
         className="h-10 w-10 object-contain transition-transform group-hover:scale-105 md:h-12 md:w-12"
       />
       <span className="hidden text-right leading-tight sm:block">
-        <span className="block text-sm font-black tracking-wide text-white">Karsoogh</span>
+        <span className="block text-sm font-black tracking-wide text-white">کارسوق</span>
         <span className="block text-[11px] font-bold text-cyan-100/70">ریاضی مهرگان</span>
       </span>
     </Link>
