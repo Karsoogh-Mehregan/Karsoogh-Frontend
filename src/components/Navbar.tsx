@@ -15,6 +15,7 @@ const NavBarItems: NavbarItemData[] = [
   // { content: 'گالری تصاویر', href: '#Gallery' },
   { content: 'کادر برگزاری', href: '/#Team' },
   { content: 'چالش هفتگی', href: '/challenge' },
+  { content: 'مستندات', href: '/docs' },
 ];
 
 const NavItems = () => {
