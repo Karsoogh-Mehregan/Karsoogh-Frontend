@@ -3,10 +3,6 @@ import { motion } from 'framer-motion';
 import { FaInstagram, FaTelegramPlane } from 'react-icons/fa';
 import { Phone, Copy, Check, ExternalLink } from 'lucide-react';
 import toast from 'react-hot-toast';
-
-import Navbar from '@/components/Navbar';
-import { XOCanvas } from '@/components/XOCanvas';
-
 import gilImage from '@/assets/landing/Images/gil.png';
 import aparatIcon from '@/assets/social-icons/aparat.svg';
 import eitaaIcon from '@/assets/social-icons/eitaa.svg';
@@ -85,104 +81,99 @@ export default function ContactUs() {
   ];
 
   return (
-    <div className="lab-shell min-h-screen" dir="rtl" lang="fa">
-      <Navbar />
-      <XOCanvas />
+    <main className="lab-container relative pt-32 pb-20 md:pt-40">
+      <div className="absolute inset-x-0 top-0 mx-auto h-52 max-w-4xl bg-cyan-500/10 blur-[100px] pointer-events-none" />
 
-      <main className="lab-container relative pt-32 pb-20 md:pt-40">
-        <div className="absolute inset-x-0 top-0 mx-auto h-52 max-w-4xl bg-cyan-500/10 blur-[100px] pointer-events-none" />
-
-        <div className="grid grid-cols-1 gap-8 lg:grid-cols-12 items-start">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.55 }}
-            className="hidden lg:flex lg:col-span-5 justify-center"
-          >
-            <div className="lab-card overflow-hidden p-3 w-full max-w-md lg:max-w-none transition-all duration-300 hover:border-cyan-500/30">
-              <div className="relative rounded-[1rem] overflow-hidden bg-slate-950/40 border border-white/5 aspect-[4/5] flex items-center justify-center">
-                <img
-                  src={gilImage}
-                  alt="کارسوق ریاضی مهرگان"
-                  className="w-full object-cover transition-transform duration-700 hover:scale-105"
-                />
-              </div>
+      <div className="grid grid-cols-1 gap-8 lg:grid-cols-12 items-start">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.55 }}
+          className="hidden lg:flex lg:col-span-5 justify-center"
+        >
+          <div className="lab-card overflow-hidden p-3 w-full max-w-md lg:max-w-none transition-all duration-300 hover:border-cyan-500/30">
+            <div className="relative rounded-[1rem] overflow-hidden bg-slate-950/40 border border-white/5 aspect-[4/5] flex items-center justify-center">
+              <img
+                src={gilImage}
+                alt="کارسوق ریاضی مهرگان"
+                className="w-full object-cover transition-transform duration-700 hover:scale-105"
+              />
             </div>
-          </motion.div>
+          </div>
+        </motion.div>
 
-          {/* Left Section: Info and Links grid */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.55, delay: 0.1 }}
-            className="lg:col-span-7 space-y-6"
-          >
-            <div className="lab-card p-6 sm:p-8">
-              <div className="mb-6">
-                <span className="lab-kicker mb-3">ارتباط با ما</span>
-                <h1 className="text-3xl font-black text-white leading-tight">
-                  شبکه‌های اجتماعی کارسوق
-                </h1>
-                <p className="mt-3 text-slate-400 text-sm leading-7">
-                  برای اطلاع از آخرین اخبار چالش‌ها، رویدادها و ارتباط با کادر برگزاری، ما را در
-                  شبکه‌های اجتماعی زیر دنبال کنید.
-                </p>
-              </div>
-
-              {/* Grid of Interactive Social Cards */}
-              <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-4">
-                {socialMediaList.map((item, index) => (
-                  <motion.a
-                    key={index}
-                    href={item.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    whileHover={{ y: -3 }}
-                    whileTap={{ scale: 0.98 }}
-                    className={`flex flex-col items-center justify-center p-4 rounded-2xl border border-white/10 bg-slate-950/20 text-center transition-all duration-300 group ${item.borderColor} ${item.glowColor}`}
-                  >
-                    <div className="mb-3 p-3 rounded-xl bg-slate-900 border border-white/5 group-hover:bg-slate-900/10 group-hover:scale-110 transition-all duration-300">
-                      {item.icon}
-                    </div>
-                    <span className="text-xs font-bold text-slate-300 group-hover:text-white transition-colors duration-200">
-                      {item.name}
-                    </span>
-                    <span className="mt-1 opacity-0 group-hover:opacity-100 text-[10px] text-cyan-400 flex items-center gap-0.5 transition-all duration-300">
-                      مشاهده <ExternalLink size={10} />
-                    </span>
-                  </motion.a>
-                ))}
-              </div>
+        {/* Left Section: Info and Links grid */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.55, delay: 0.1 }}
+          className="lg:col-span-7 space-y-6"
+        >
+          <div className="lab-card p-6 sm:p-8">
+            <div className="mb-6">
+              <span className="lab-kicker mb-3">ارتباط با ما</span>
+              <h1 className="text-3xl font-black text-white leading-tight">
+                شبکه‌های اجتماعی کارسوق
+              </h1>
+              <p className="mt-3 text-slate-400 text-sm leading-7">
+                برای اطلاع از آخرین اخبار چالش‌ها، رویدادها و ارتباط با کادر برگزاری، ما را در
+                شبکه‌های اجتماعی زیر دنبال کنید.
+              </p>
             </div>
 
-            {/* Support Call Card */}
-            <motion.div
-              whileHover={{ y: -2 }}
-              className="lab-card p-6 flex flex-col sm:flex-row items-center justify-between gap-6 transition-all duration-300 hover:border-amber-500/30"
-            >
-              <div className="flex items-center gap-4 text-center sm:text-right">
-                <div className="p-3.5 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-amber-400">
-                  <Phone size={24} />
-                </div>
-                <div>
-                  <h3 className="text-lg font-extrabold text-white">شماره تماس کارسوق</h3>
-                  <p className="text-xs text-slate-400 mt-1">پاسخگوی سوالات و ابهامات شما هستیم</p>
-                </div>
-              </div>
-
-              <div className="flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto">
-                <button
-                  onClick={handleCopyPhone}
-                  className="flex items-center justify-center gap-2 bg-white/[0.06] hover:bg-white/[0.1] border border-white/10 text-white font-bold px-5 py-3 rounded-xl transition duration-200 w-full sm:w-auto text-sm active:scale-[0.98]"
+            {/* Grid of Interactive Social Cards */}
+            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-4">
+              {socialMediaList.map((item, index) => (
+                <motion.a
+                  key={index}
+                  href={item.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  whileHover={{ y: -3 }}
+                  whileTap={{ scale: 0.98 }}
+                  className={`flex flex-col items-center justify-center p-4 rounded-2xl border border-white/10 bg-slate-950/20 text-center transition-all duration-300 group ${item.borderColor} ${item.glowColor}`}
                 >
-                  {copied ? <Check size={16} className="text-emerald-400" /> : <Copy size={16} />}
-                  <span dir="ltr">+۹۸ ۹۹۸ ۱۳۹ ۴۱۰۲</span>
-                </button>
+                  <div className="mb-3 p-3 rounded-xl bg-slate-900 border border-white/5 group-hover:bg-slate-900/10 group-hover:scale-110 transition-all duration-300">
+                    {item.icon}
+                  </div>
+                  <span className="text-xs font-bold text-slate-300 group-hover:text-white transition-colors duration-200">
+                    {item.name}
+                  </span>
+                  <span className="mt-1 opacity-0 group-hover:opacity-100 text-[10px] text-cyan-400 flex items-center gap-0.5 transition-all duration-300">
+                    مشاهده <ExternalLink size={10} />
+                  </span>
+                </motion.a>
+              ))}
+            </div>
+          </div>
+
+          {/* Support Call Card */}
+          <motion.div
+            whileHover={{ y: -2 }}
+            className="lab-card p-6 flex flex-col sm:flex-row items-center justify-between gap-6 transition-all duration-300 hover:border-amber-500/30"
+          >
+            <div className="flex items-center gap-4 text-center sm:text-right">
+              <div className="p-3.5 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-amber-400">
+                <Phone size={24} />
               </div>
-            </motion.div>
+              <div>
+                <h3 className="text-lg font-extrabold text-white">شماره تماس کارسوق</h3>
+                <p className="text-xs text-slate-400 mt-1">پاسخگوی سوالات و ابهامات شما هستیم</p>
+              </div>
+            </div>
+
+            <div className="flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto">
+              <button
+                onClick={handleCopyPhone}
+                className="flex items-center justify-center gap-2 bg-white/[0.06] hover:bg-white/[0.1] border border-white/10 text-white font-bold px-5 py-3 rounded-xl transition duration-200 w-full sm:w-auto text-sm active:scale-[0.98]"
+              >
+                {copied ? <Check size={16} className="text-emerald-400" /> : <Copy size={16} />}
+                <span dir="ltr">+۹۸ ۹۹۸ ۱۳۹ ۴۱۰۲</span>
+              </button>
+            </div>
           </motion.div>
-        </div>
-      </main>
-    </div>
+        </motion.div>
+      </div>
+    </main>
   );
 }

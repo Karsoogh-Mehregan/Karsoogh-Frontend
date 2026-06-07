@@ -112,6 +112,30 @@ export function XOCanvas() {
       }
     };
 
+    const resizeParticles = (newWidth: number, newHeight: number) => {
+      const oldWidth = sizeRef.current.width || newWidth;
+      const oldHeight = sizeRef.current.height || newHeight;
+
+      // Scale particle coordinates to keep their relative spatial distribution
+      particles.forEach((p) => {
+        p.x = p.x * (newWidth / oldWidth);
+        p.y = p.y * (newHeight / oldHeight);
+      });
+
+      // Dynamically adjust particle count to match screen density
+      const densityLimit = newWidth < 768 ? 42 : 78;
+      const targetDensity = Math.min(densityLimit, Math.floor((newWidth * newHeight) / 52000));
+
+      if (particles.length < targetDensity) {
+        const diff = targetDensity - particles.length;
+        for (let i = 0; i < diff; i++) {
+          particles.push(new XOParticle(newWidth, newHeight));
+        }
+      } else if (particles.length > targetDensity) {
+        particles.length = targetDensity;
+      }
+    };
+
     const drawConnections = () => {
       if (sizeRef.current.width < 768) return;
 
@@ -156,12 +180,14 @@ export function XOCanvas() {
     };
 
     const handleResize = () => {
-      if (rafRef.current) {
-        cancelAnimationFrame(rafRef.current);
+      const { width, height } = getCanvasBounds();
+      // Only resize if the dimensions have actually changed
+      if (width === sizeRef.current.width && height === sizeRef.current.height) {
+        return;
       }
+
+      resizeParticles(width, height);
       setCanvasSize();
-      init();
-      animate();
     };
 
     const handleVisibilityChange = () => {
