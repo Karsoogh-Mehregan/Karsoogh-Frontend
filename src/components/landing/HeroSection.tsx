@@ -20,13 +20,16 @@ export function HeroSection() {
           دبیرخانه امور پژوهشی سازمان استعدادهای درخشان استان اصفهان
         </span>
 
-        <h1 className="mt-7 text-4xl font-black leading-[1.25] text-white sm:text-5xl lg:text-6xl">
+        {/* <h1 className="mt-7 text-4xl font-black leading-[1.25] text-white sm:text-5xl lg:text-6xl">
           کارسوق ریاضی مهرگان، دوره ۲۶
-        </h1>
+        </h1> */}
 
+        <h1 className="mt-7 flex flex-col gap-4 text-4xl font-black text-white sm:text-5xl lg:text-6xl">
+          <span>کارسوق ریاضی مهرگان،</span>
+          <span>دوره ۲۶</span>
+        </h1>
         <p className="mt-6 max-w-2xl text-base leading-8 text-slate-300 sm:text-lg">
-          با همکاری دانش‌آموختگان سمپاد استان برگزار می‌شود؛ رویدادی برای تجربه‌ی ریاضی بیرون از
-          قالب‌های خشک امتحان، نمره و کلاس‌های معمول.
+          با همکاری دانش‌آموختگان سمپاد استان برگزار می‌شود.
         </p>
 
         <div className="mt-8 flex flex-col gap-3 sm:flex-row">
@@ -34,14 +37,15 @@ export function HeroSection() {
             کارسوق؟ کارسوق کیه؟
             <ArrowLeft size={18} aria-hidden="true" />
           </Link>
-          <button
-            type="button"
+          <a
+            href="https://form.sampad.gov.ir/sampad/formView/3097"
+            target="_blank"
+            rel="noopener noreferrer"
             className="lab-button-secondary"
-            disabled
-            title="تاریخ جدید ثبت‌نام اطلاع‌رسانی خواهد شد"
+            title="ورود به فرم ثبت‌نام"
           >
-            تاریخ ثبت‌نام به‌زودی
-          </button>
+            فرم ثبت‌نام
+          </a>
         </div>
 
         <ul className="mt-9 grid gap-3 text-sm text-slate-300 sm:grid-cols-3">
