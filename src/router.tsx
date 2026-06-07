@@ -27,6 +27,24 @@ const router = createBrowserRouter([
   },
 
   {
+    path: '/contact-us',
+    lazy: async () => {
+      const { default: ContactUs } = await import('@/pages/ContactUs');
+      return { Component: ContactUs };
+    },
+  },
+
+  {
+    path: '/contact',
+    element: <Navigate to="/contact-us" replace />,
+  },
+
+  {
+    path: '/zillink',
+    element: <Navigate to="/contact-us" replace />,
+  },
+
+  {
     path: '/docs',
     lazy: async () => {
       const { default: DocsIndex } = await import('@/components/docs/DocsIndex');
