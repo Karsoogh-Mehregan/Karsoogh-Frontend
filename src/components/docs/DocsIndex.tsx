@@ -9,7 +9,6 @@ export default function DocsIndex() {
     <div className="lab-shell min-h-screen font-secondary" dir="rtl" lang="fa">
       <div className="lab-container py-10 sm:py-14">
         <header className="mb-10 text-right">
-          <p className="lab-kicker mb-3">مستندات</p>
           <h1 className="text-3xl font-black tracking-tight text-white sm:text-4xl">
             فهرست مستندات
           </h1>

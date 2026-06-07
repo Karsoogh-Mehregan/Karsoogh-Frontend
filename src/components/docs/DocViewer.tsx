@@ -32,13 +32,16 @@ export default function DocViewer() {
     <div className="lab-shell min-h-screen font-secondary" dir="rtl" lang="fa">
       <div className="lab-container py-10 sm:py-14">
         <header className="mb-8 text-right">
-          <Link
+          {/* <Link
             to="/docs"
             className="mb-4 inline-flex cursor-pointer items-center gap-1 text-sm font-bold text-cyan-200 transition hover:text-cyan-100"
           >
-            همه مستندات
+            بازگشت
+          </Link> */}
+          {/* <p className="lab-kicker mb-3">مستندات</p> */}
+          <Link to="/docs" className="lab-kicker mb-3 transition hover:text-white">
+            بازگشت
           </Link>
-          <p className="lab-kicker mb-3">مستندات</p>
           <h1 className="text-3xl font-black tracking-tight text-white sm:text-4xl">
             {getDocTitle(docName)}
           </h1>

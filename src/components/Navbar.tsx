@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { FlaskConical, LogIn, Menu, Sparkles, X } from 'lucide-react';
+import { FlaskConical, LogIn, Menu, UserRoundPlus, X } from 'lucide-react';
 import logoIcon from '@/assets/Karsoogh.ico';
 import { Link } from 'react-router-dom';
 
@@ -61,15 +61,16 @@ const LoginButton = () => {
 
 const SignUpButton = () => {
   return (
-    <button
-      type="button"
+    <a
+      href="https://form.sampad.gov.ir/sampad/formView/3097"
+      target="_blank"
+      rel="noopener noreferrer"
       className="lab-button-primary hidden min-h-10 px-4 py-2 text-xs md:inline-flex md:text-sm"
-      disabled
-      title="ثبت‌نام به‌زودی فعال می‌شود"
+      title="رفتن به فرم ثبت‌نام"
     >
-      <Sparkles size={16} aria-hidden="true" />
-      ثبت‌نام به‌زودی
-    </button>
+      <UserRoundPlus size={16} aria-hidden="true" />
+      ثبت‌نام
+    </a>
   );
 };
 
@@ -119,14 +120,15 @@ const MobileMenu = ({
           ))}
 
           <li className="pt-2">
-            <button
-              type="button"
+            <a
+              href="https://form.sampad.gov.ir/sampad/formView/3097"
+              target="_blank"
+              rel="noopener noreferrer"
               className="lab-button-primary w-full"
-              disabled
-              title="ثبت‌نام به‌زودی فعال می‌شود"
+              title="رفتن به فرم ثبت‌نام"
             >
-              تاریخ ثبت‌نام به‌زودی
-            </button>
+              ثبت‌نام
+            </a>
           </li>
         </ul>
       </div>
