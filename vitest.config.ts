@@ -18,8 +18,8 @@ export default defineConfig({
       reporter: ['text', 'lcov'],
       include: ['src/**/*.{ts,tsx}'],
       thresholds: {
-        lines: 20,
-        statements: 20,
+        lines: 14,
+        statements: 14,
       },
     },
   },

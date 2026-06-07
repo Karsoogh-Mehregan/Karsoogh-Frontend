@@ -1,7 +1,43 @@
 import React, { useState } from 'react';
 import { FlaskConical, LogIn, Menu, UserRoundPlus, X } from 'lucide-react';
 import logoIcon from '@/assets/Karsoogh.ico';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
+
+const useLinkClickHandler = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  return (href: string, onComplete?: () => void) => {
+    if (href.startsWith('/#')) {
+      const sectionId = href.replace('/#', '');
+
+      if (location.pathname !== '/') {
+        navigate('/');
+        setTimeout(() => {
+          const element = document.getElementById(sectionId);
+          if (element) {
+            const yOffset = -80;
+            const y = element.getBoundingClientRect().top + window.scrollY + yOffset;
+            window.scrollTo({ top: y, behavior: 'smooth' });
+          }
+        }, 150);
+      } else {
+        const element = document.getElementById(sectionId);
+        if (element) {
+          const yOffset = -80;
+          const y = element.getBoundingClientRect().top + window.scrollY + yOffset;
+          window.scrollTo({ top: y, behavior: 'smooth' });
+        }
+      }
+    } else {
+      navigate(href);
+    }
+
+    if (onComplete) {
+      onComplete();
+    }
+  };
+};
 
 type NavbarItemData = {
   content: string;
@@ -20,12 +56,18 @@ const NavBarItems: NavbarItemData[] = [
 ];
 
 const NavItems = () => {
+  const handleLinkClick = useLinkClickHandler();
+
   return (
     <div className="hidden h-full items-center gap-1 lg:flex">
       {NavBarItems.map(({ content, href }, index) => (
         <Link
           key={index}
           to={href}
+          onClick={(e) => {
+            e.preventDefault();
+            handleLinkClick(href);
+          }}
           className="relative flex h-10 items-center whitespace-nowrap rounded-xl px-3 text-xs font-bold text-slate-300 transition-colors hover:bg-white/[0.06] hover:text-white xl:text-sm"
         >
           {content}
@@ -102,6 +144,8 @@ const MobileMenu = ({
   isOpen: boolean;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
+  const handleLinkClick = useLinkClickHandler();
+
   if (!isOpen) return null;
 
   return (
@@ -111,7 +155,10 @@ const MobileMenu = ({
           {NavBarItems.map((item, index) => (
             <li key={index}>
               <Link
-                onClick={() => setIsOpen(false)}
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleLinkClick(item.href, () => setIsOpen(false));
+                }}
                 to={item.href}
                 className="flex min-h-12 items-center rounded-2xl px-4 font-bold text-slate-200 transition-colors hover:bg-white/[0.07] hover:text-white"
               >
