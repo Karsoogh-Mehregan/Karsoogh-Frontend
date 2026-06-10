@@ -13,12 +13,20 @@ import siteIcon2 from '@/assets/social-icons/icon2.jpg';
 
 export default function ContactUs() {
   const [copied, setCopied] = React.useState(false);
+  const [copiedId, setCopiedId] = React.useState(false);
 
   const handleCopyPhone = () => {
     navigator.clipboard.writeText('+989981394102');
     setCopied(true);
     toast.success('شماره تماس کارسوق کپی شد!');
     setTimeout(() => setCopied(false), 2000);
+  };
+
+  const handleCopyId = () => {
+    navigator.clipboard.writeText('@karsooghadmin');
+    setCopiedId(true);
+    toast.success('آیدی پشتیبانی کپی شد!');
+    setTimeout(() => setCopiedId(false), 2000);
   };
 
   const socialMediaList = [
@@ -147,7 +155,7 @@ export default function ContactUs() {
             </div>
           </div>
 
-          {/* Support Call Card */}
+          {/* Support Card */}
           <motion.div
             whileHover={{ y: -2 }}
             className="lab-card p-6 flex flex-col sm:flex-row items-center justify-between gap-6 transition-all duration-300 hover:border-amber-500/30"
@@ -157,18 +165,29 @@ export default function ContactUs() {
                 <Phone size={24} />
               </div>
               <div>
-                <h3 className="text-lg font-extrabold text-white">شماره تماس کارسوق</h3>
+                <h3 className="text-lg font-extrabold text-white">ارتباط با پشتیبانی</h3>
                 <p className="text-xs text-slate-400 mt-1">پاسخگوی سوالات و ابهامات شما هستیم</p>
               </div>
             </div>
 
             <div className="flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto">
               <button
+                onClick={handleCopyId}
+                className="flex items-center justify-center gap-2 bg-white/[0.06] hover:bg-white/[0.1] border border-white/10 text-white font-bold px-6 py-3 rounded-xl transition duration-200 w-full sm:w-auto min-w-[160px] text-sm active:scale-[0.98]"
+              >
+                {copiedId ? <Check size={16} className="text-emerald-400" /> : <Copy size={16} />}
+                <span dir="ltr" className="whitespace-nowrap">
+                  @karsooghadmin
+                </span>
+              </button>
+              <button
                 onClick={handleCopyPhone}
-                className="flex items-center justify-center gap-2 bg-white/[0.06] hover:bg-white/[0.1] border border-white/10 text-white font-bold px-5 py-3 rounded-xl transition duration-200 w-full sm:w-auto text-sm active:scale-[0.98]"
+                className="flex items-center justify-center gap-2 bg-white/[0.06] hover:bg-white/[0.1] border border-white/10 text-white font-bold px-6 py-3 rounded-xl transition duration-200 w-full sm:w-auto min-w-[160px] text-sm active:scale-[0.98]"
               >
                 {copied ? <Check size={16} className="text-emerald-400" /> : <Copy size={16} />}
-                <span dir="ltr">+۹۸ ۹۹۸ ۱۳۹ ۴۱۰۲</span>
+                <span dir="ltr" className="whitespace-nowrap">
+                  +۹۸ ۹۹۸ ۱۳۹ ۴۱۰۲
+                </span>
               </button>
             </div>
           </motion.div>

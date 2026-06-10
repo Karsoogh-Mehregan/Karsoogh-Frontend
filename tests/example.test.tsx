@@ -38,7 +38,7 @@ describe('landing and auth flows', () => {
     );
 
     expect(
-      screen.getByRole('heading', { level: 1, name: /کارسوق ریاضی مهرگان،\s*دوره ۲۶/ }),
+      screen.getByRole('heading', { level: 1, name: /کارسوق ریاضی مهرگان\s*دوره ۲۶/ }),
     ).toBeInTheDocument();
   });
 
