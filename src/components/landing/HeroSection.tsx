@@ -15,24 +15,22 @@ export function HeroSection() {
         transition={{ duration: 0.7, ease: 'easeOut' }}
         className="max-w-3xl"
       >
-        <span className="lab-kicker">
-          <Atom size={15} aria-hidden="true" />
-          دبیرخانه امور پژوهشی سازمان استعدادهای درخشان استان اصفهان
-        </span>
-
-        {/* <h1 className="mt-7 text-4xl font-black leading-[1.25] text-white sm:text-5xl lg:text-6xl">
-          کارسوق ریاضی مهرگان، دوره ۲۶
-        </h1> */}
+        <div className="mb-2 flex max-w-2xl items-start gap-3 text-sm font-medium text-cyan-100/90 sm:text-base">
+          <div className="mt-0.5 shrink-0 rounded-lg bg-cyan-500/10 p-1.5 ring-1 ring-cyan-500/20">
+            <Atom className="text-cyan-400" size={16} aria-hidden="true" />
+          </div>
+          <p className="leading-relaxed">
+            دبیرخانه امور پژوهشی اداره استعداد های درخشان استان اصفهان با همکاری جمعی از دانش
+            آموختگان سمپاد برگزار می‌نماید
+          </p>
+        </div>
 
         <h1 className="mt-7 flex flex-col gap-4 text-4xl font-black text-white sm:text-5xl lg:text-6xl">
-          <span>کارسوق ریاضی مهرگان،</span>
+          <span>کارسوق ریاضی مهرگان</span>
           <span>دوره ۲۶</span>
         </h1>
-        <p className="mt-6 max-w-2xl text-base leading-8 text-slate-300 sm:text-lg">
-          با همکاری دانش‌آموختگان سمپاد استان برگزار می‌شود.
-        </p>
 
-        <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+        <div className="mt-20 flex flex-col gap-3 sm:flex-row">
           <Link to="#About" className="lab-button-primary">
             کارسوق؟ کارسوق کیه؟
             <ArrowLeft size={18} aria-hidden="true" />

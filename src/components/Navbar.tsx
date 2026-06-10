@@ -13,14 +13,15 @@ const useLinkClickHandler = () => {
 
       if (location.pathname !== '/') {
         navigate('/');
-        setTimeout(() => {
-          const element = document.getElementById(sectionId);
-          if (element) {
-            const yOffset = -80;
-            const y = element.getBoundingClientRect().top + window.scrollY + yOffset;
-            window.scrollTo({ top: y, behavior: 'smooth' });
-          }
-        }, 150);
+        if (sectionId !== 'Home')
+          setTimeout(() => {
+            const element = document.getElementById(sectionId);
+            if (element) {
+              const yOffset = -80;
+              const y = element.getBoundingClientRect().top + window.scrollY + yOffset;
+              window.scrollTo({ top: y, behavior: 'smooth' });
+            }
+          }, 150);
       } else {
         const element = document.getElementById(sectionId);
         if (element) {
