@@ -52,6 +52,7 @@ const NavBarItems: NavbarItemData[] = [
   // { content: 'گالری تصاویر', href: '#Gallery' },
   { content: 'کادر برگزاری', href: '/#Team' },
   { content: 'چالش هفتگی', href: '/challenge' },
+  { content: 'دوره قبل', href: '/docs/mehregan25' },
   { content: 'مستندات', href: '/docs' },
   { content: 'ارتباط با ما', href: '/contact-us' },
 ];
