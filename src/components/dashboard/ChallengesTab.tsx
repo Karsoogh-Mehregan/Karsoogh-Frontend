@@ -11,7 +11,7 @@ export default function ChallengesTab() {
         </div>
         <h3 className="text-xl font-bold text-white mb-2">چالش‌های هفتگی</h3>
         <p className="text-slate-400 max-w-sm leading-relaxed mb-6">
-          شما می‌توانید در چالش‌های هفتگی کارسوق شرکت کنید و امتیاز کسب کنید.
+          شما می‌توانید در چالش‌های هفتگی کارسوق شرکت کنید و جایزه ببرید!
         </p>
         <Link to="/challenge" className="lab-button-primary">
           ورود به بخش چالش
