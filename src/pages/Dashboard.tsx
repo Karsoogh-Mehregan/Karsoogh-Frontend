@@ -32,7 +32,7 @@ export default function Dashboard() {
         setIsSidebarOpen={setIsSidebarOpen}
       />
 
-      <main className={`transition-all duration-300 ${isSidebarOpen ? 'mr-64' : 'mr-20'}`}>
+      <main className={`transition-all duration-300 ${isSidebarOpen ? 'md:mr-64' : 'md:mr-20'}`}>
         <div className="p-4 md:p-8">
           <section className="mx-auto max-w-5xl">
             <div className="lab-card p-6 md:p-8 min-h-[400px]">

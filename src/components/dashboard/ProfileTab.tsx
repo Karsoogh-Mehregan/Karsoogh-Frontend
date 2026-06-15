@@ -1,8 +1,10 @@
 import { useAuth } from '@/context/AuthContext';
-import { Mail, Phone, Shield, UserRound } from 'lucide-react';
+import { GraduationCap, Mail, Phone, Shield, UserRound, MapPin, Map } from 'lucide-react';
 
 export default function ProfileTab() {
   const { user } = useAuth();
+
+  const displayName = [user?.first_name, user?.last_name].filter(Boolean).join(' ') || null;
 
   return (
     <div>
@@ -16,6 +18,13 @@ export default function ProfileTab() {
             <span>نام کاربری</span>
           </div>
           <p className="font-bold text-white text-lg">{user?.username || 'ثبت نشده'}</p>
+        </div>
+        <div className="rounded-xl border border-white/10 bg-white/5 p-4">
+          <div className="flex items-center gap-2 text-sm text-slate-400 mb-2">
+            <UserRound size={16} />
+            <span>نام و نام خانوادگی</span>
+          </div>
+          <p className="font-bold text-white text-lg">{displayName || 'ثبت نشده'}</p>
         </div>
         <div className="rounded-xl border border-white/10 bg-white/5 p-4">
           <div className="flex items-center gap-2 text-sm text-slate-400 mb-2">
@@ -37,6 +46,27 @@ export default function ProfileTab() {
             <span>کد ملی</span>
           </div>
           <p className="font-bold text-white text-lg">{user?.national_code || 'ثبت نشده'}</p>
+        </div>
+        <div className="rounded-xl border border-white/10 bg-white/5 p-4">
+          <div className="flex items-center gap-2 text-sm text-slate-400 mb-2">
+            <GraduationCap size={16} />
+            <span>مدرسه</span>
+          </div>
+          <p className="font-bold text-white text-lg">{user?.school?.title || 'ثبت نشده'}</p>
+        </div>
+        <div className="rounded-xl border border-white/10 bg-white/5 p-4">
+          <div className="flex items-center gap-2 text-sm text-slate-400 mb-2">
+            <Map size={16} />
+            <span>استان</span>
+          </div>
+          <p className="font-bold text-white text-lg">{user?.province?.title || 'ثبت نشده'}</p>
+        </div>
+        <div className="rounded-xl border border-white/10 bg-white/5 p-4">
+          <div className="flex items-center gap-2 text-sm text-slate-400 mb-2">
+            <MapPin size={16} />
+            <span>شهر</span>
+          </div>
+          <p className="font-bold text-white text-lg">{user?.city?.title || 'ثبت نشده'}</p>
         </div>
       </div>
     </div>
