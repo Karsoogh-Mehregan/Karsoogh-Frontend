@@ -1,12 +1,29 @@
 import { apiClient } from './api';
 
+export interface School {
+  id: number;
+  title: string;
+}
+
+export interface City {
+  id: number;
+  title: string;
+}
+
+export interface Province {
+  id: number;
+  title: string;
+}
+
 export interface User {
   username: string;
   email: string;
   first_name: string;
   last_name: string;
   national_code: string;
-  school: unknown;
+  school: School | null;
+  city?: City | null;
+  province?: Province | null;
   phone: string;
 }
 

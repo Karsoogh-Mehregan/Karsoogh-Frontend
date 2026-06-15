@@ -9,9 +9,9 @@ export default function ChallengesTab() {
         <div className="grid h-20 w-20 place-items-center rounded-full bg-amber-500/10 mb-4">
           <Trophy size={32} className="text-amber-400" />
         </div>
-        <h3 className="text-xl font-bold text-white mb-2">چالش‌های هفتگی</h3>
+        <h3 className="text-xl font-bold text-white mb-2">چالش‌ها</h3>
         <p className="text-slate-400 max-w-sm leading-relaxed mb-6">
-          شما می‌توانید در چالش‌های هفتگی کارسوق شرکت کنید و جایزه ببرید!
+          شما می‌توانید در چالش‌های کارسوق شرکت کنید و جایزه ببرید!
         </p>
         <Link to="/challenge" className="lab-button-primary">
           ورود به بخش چالش
