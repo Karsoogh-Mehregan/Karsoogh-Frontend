@@ -49,7 +49,7 @@ export default function RouteErrorBoundary() {
           <span>بارگذاری مجدد صفحه</span>
         </button>
 
-        {process.env.NODE_ENV !== 'production' && error && (
+        {import.meta.env.DEV && error && (
           <div className="mt-8 text-right">
             <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider block mb-2">
               Error Details:
