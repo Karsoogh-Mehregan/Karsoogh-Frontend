@@ -2,6 +2,42 @@ import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { challengeService } from '@/services/challengeService';
+import Skeleton from '@/components/Skeleton';
+
+function ChallengeSkeleton() {
+  return (
+    <main className="mx-auto max-w-4xl px-4 pt-32 pb-24 md:pt-40 md:pb-32 sm:px-6">
+      {/* Title */}
+      <div className="flex justify-center">
+        <Skeleton.Bone width="60%" height="2.5rem" />
+      </div>
+
+      {/* Description block */}
+      <div className="mt-8 rounded-2xl border border-white/[0.08] p-6 space-y-3">
+        <Skeleton.Text lines={10} lastLineWidth="75%" />
+      </div>
+
+      {/* Form skeleton */}
+      <div className="lab-card mt-12 overflow-hidden p-6 md:p-8">
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <div key={i} className="space-y-2">
+              <Skeleton.Bone width="30%" height="0.75rem" />
+              <Skeleton.Bone width="100%" height="2.75rem" borderRadius="0.75rem" />
+            </div>
+          ))}
+          <div className="md:col-span-2 lg:col-span-3 space-y-2">
+            <Skeleton.Bone width="20%" height="0.75rem" />
+            <Skeleton.Bone width="100%" height="7.5rem" borderRadius="0.75rem" />
+          </div>
+        </div>
+        <div className="mt-8 flex justify-end">
+          <Skeleton.Bone width={160} height={44} borderRadius="0.75rem" />
+        </div>
+      </div>
+    </main>
+  );
+}
 
 export function Challenge() {
   const { slug } = useParams();
@@ -11,6 +47,7 @@ export function Challenge() {
   const [description, setDescription] = useState('');
   const [regex, setRegex] = useState('');
   const [loading, setLoading] = useState(false);
+  const [fetchLoading, setFetchLoading] = useState(!slug);
   const [fieldsData, setFieldsData] = useState({
     firstname: '',
     lastname: '',
@@ -39,9 +76,16 @@ export function Challenge() {
           setLatestChallengeSlug(null);
           toast.remove();
           toast.error(error.message || 'خطا در دریافت چالش فعال');
+        })
+        .finally(() => {
+          setFetchLoading(false);
         });
     }
   }, [slug]);
+
+  if (fetchLoading) {
+    return <ChallengeSkeleton />;
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
