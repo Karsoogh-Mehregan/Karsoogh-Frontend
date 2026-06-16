@@ -1,6 +1,50 @@
 import { resourceService, type DashboardResource } from '@/services/resourceService';
-import { AlertCircle, ExternalLink, FolderOpen, Loader2, Sparkles } from 'lucide-react';
+import { AlertCircle, ExternalLink, FolderOpen, Sparkles } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import Skeleton from '@/components/Skeleton';
+
+function ResourcesSkeleton() {
+  return (
+    <div className="animate-[fadeIn_0.3s_ease-out]">
+      {/* Header bone */}
+      <Skeleton.Bone width="35%" height="1.25rem" className="mb-6" />
+
+      {/* Video cards grid */}
+      <div className="grid gap-5 sm:grid-cols-2 mb-5">
+        {[0, 1].map((i) => (
+          <div key={i} className="rounded-[1.25rem] border border-white/[0.08] overflow-hidden">
+            <Skeleton.Bone
+              width="100%"
+              height="0"
+              borderRadius={0}
+              className="!rounded-none aspect-video"
+            />
+            <div className="p-4 space-y-3">
+              <Skeleton.Bone width="60%" height="1rem" />
+              <Skeleton.Text lines={2} lastLineWidth="80%" />
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Link cards */}
+      <div className="flex flex-col gap-3">
+        {[0, 1, 2].map((i) => (
+          <div
+            key={i}
+            className="flex items-center gap-4 p-4 rounded-[1.25rem] border border-white/[0.08]"
+          >
+            <Skeleton.Bone width={48} height={48} borderRadius="0.75rem" className="shrink-0" />
+            <div className="flex-1 space-y-2">
+              <Skeleton.Bone width="45%" height="1rem" />
+              <Skeleton.Bone width="70%" height="0.75rem" />
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
 
 function VideoPlayer({ resource }: { resource: DashboardResource }) {
   if (resource.type === 'video_direct') {
@@ -167,12 +211,7 @@ export default function ResourcesTab() {
     <div>
       <h2 className="text-2xl font-black text-white mb-6 border-b border-white/10 pb-4">منابع</h2>
 
-      {loading && (
-        <div className="flex flex-col items-center justify-center py-16">
-          <Loader2 size={32} className="text-cyan-400 animate-spin" />
-          <p className="mt-4 text-sm text-slate-400">در حال بارگذاری...</p>
-        </div>
-      )}
+      {loading && <ResourcesSkeleton />}
 
       {!loading && error && (
         <div className="flex flex-col items-center justify-center text-center py-12 px-4">
