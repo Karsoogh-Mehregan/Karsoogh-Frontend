@@ -1,10 +1,12 @@
 import { createBrowserRouter, Navigate } from 'react-router-dom';
 import ProtectedRoute from './components/ProtectedRoute';
 import PublicLayout from './components/PublicLayout';
+import RouteErrorBoundary from './components/RouteErrorBoundary';
 
 const router = createBrowserRouter([
   {
     element: <PublicLayout />,
+    errorElement: <RouteErrorBoundary />,
     children: [
       {
         path: '/',
@@ -50,6 +52,7 @@ const router = createBrowserRouter([
 
   {
     path: '/login',
+    errorElement: <RouteErrorBoundary />,
     lazy: async () => {
       const { default: LoginPage } = await import('@/pages/LoginPage');
       return { Component: LoginPage };
@@ -69,6 +72,7 @@ const router = createBrowserRouter([
   /* --- Protected Routes --- */
   {
     element: <ProtectedRoute />,
+    errorElement: <RouteErrorBoundary />,
     children: [
       {
         path: '/dashboard',
