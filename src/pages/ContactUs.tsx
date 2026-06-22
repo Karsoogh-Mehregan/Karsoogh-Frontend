@@ -1,5 +1,4 @@
 import React from 'react';
-import { motion } from 'framer-motion';
 import { FaInstagram, FaTelegramPlane } from 'react-icons/fa';
 import { Phone, Copy, Check, ExternalLink } from 'lucide-react';
 import toast from 'react-hot-toast';
@@ -93,10 +92,8 @@ export default function ContactUs() {
       <div className="absolute inset-x-0 top-0 mx-auto h-52 max-w-4xl bg-cyan-500/10 blur-[100px] pointer-events-none" />
 
       <div className="grid grid-cols-1 gap-8 lg:grid-cols-12 items-start">
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.55 }}
+        <div
+          style={{ animation: 'heroSlideUp 0.55s ease-out both' }}
           className="hidden lg:flex lg:col-span-5 justify-center"
         >
           <div className="lab-card overflow-hidden p-3 w-full max-w-md lg:max-w-none transition-all duration-300 hover:border-cyan-500/30">
@@ -108,13 +105,11 @@ export default function ContactUs() {
               />
             </div>
           </div>
-        </motion.div>
+        </div>
 
         {/* Left Section: Info and Links grid */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.55, delay: 0.1 }}
+        <div
+          style={{ animation: 'heroSlideUp 0.55s 0.1s ease-out both' }}
           className="lg:col-span-7 space-y-6"
         >
           <div className="lab-card p-6 sm:p-8">
@@ -132,14 +127,12 @@ export default function ContactUs() {
             {/* Grid of Interactive Social Cards */}
             <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-4">
               {socialMediaList.map((item, index) => (
-                <motion.a
+                <a
                   key={index}
                   href={item.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  whileHover={{ y: -3 }}
-                  whileTap={{ scale: 0.98 }}
-                  className={`flex flex-col items-center justify-center p-4 rounded-2xl border border-white/10 bg-slate-950/20 text-center transition-all duration-300 group ${item.borderColor} ${item.glowColor}`}
+                  className={`flex flex-col items-center justify-center p-4 rounded-2xl border border-white/10 bg-slate-950/20 text-center transition-all duration-300 group hover:-translate-y-1 active:scale-[0.98] ${item.borderColor} ${item.glowColor}`}
                 >
                   <div className="mb-3 p-3 rounded-xl bg-slate-900 border border-white/5 group-hover:bg-slate-900/10 group-hover:scale-110 transition-all duration-300">
                     {item.icon}
@@ -150,16 +143,13 @@ export default function ContactUs() {
                   <span className="mt-1 opacity-0 group-hover:opacity-100 text-[10px] text-cyan-400 flex items-center gap-0.5 transition-all duration-300">
                     مشاهده <ExternalLink size={10} />
                   </span>
-                </motion.a>
+                </a>
               ))}
             </div>
           </div>
 
           {/* Support Card */}
-          <motion.div
-            whileHover={{ y: -2 }}
-            className="lab-card p-6 flex flex-col sm:flex-row items-center justify-between gap-6 transition-all duration-300 hover:border-amber-500/30"
-          >
+          <div className="lab-card p-6 flex flex-col sm:flex-row items-center justify-between gap-6 transition-all duration-300 hover:-translate-y-0.5 hover:border-amber-500/30">
             <div className="flex items-center gap-4 text-center sm:text-right">
               <div className="p-3.5 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-amber-400">
                 <Phone size={24} />
@@ -190,8 +180,8 @@ export default function ContactUs() {
                 </span>
               </button>
             </div>
-          </motion.div>
-        </motion.div>
+          </div>
+        </div>
       </div>
     </main>
   );
