@@ -79,8 +79,7 @@ export function XOCanvas() {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    // Use alpha:false for a small compositing speedup since we clearRect every frame
-    const ctx = canvas.getContext('2d', { alpha: false });
+    const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -173,9 +172,7 @@ export function XOCanvas() {
     const animate = () => {
       const { width, height } = sizeRef.current;
 
-      // fillRect instead of clearRect because alpha:false means we don't need transparency
-      ctx.fillStyle = '#060913';
-      ctx.fillRect(0, 0, width, height);
+      ctx.clearRect(0, 0, width, height);
       drawConnections();
       particles.forEach((p) => {
         if (!reducedMotion) {

@@ -8,7 +8,6 @@ This is the frontend application for Karsoogh, built with React and TypeScript.
 - **Build Tool:** Vite 7
 - **Styling:** Tailwind CSS 3 & PostCSS
 - **Routing:** React Router DOM 7
-- **Animation:** Framer Motion
 - **Markdown & Math:** React Markdown, KaTeX, Rehype
 - **Testing:** Vitest & React Testing Library
 - **Code Quality:** ESLint, Prettier, Husky & Commitlint
