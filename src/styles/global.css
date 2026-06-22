@@ -240,6 +240,8 @@ button:disabled {
     box-shadow: var(--shadow-lab);
     backdrop-filter: blur(22px);
     -webkit-backdrop-filter: blur(22px);
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
   }
 
   .lab-card {
@@ -251,6 +253,8 @@ button:disabled {
     box-shadow: var(--shadow-lab);
     backdrop-filter: blur(22px);
     -webkit-backdrop-filter: blur(22px);
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
   }
 
   @media (max-width: 767px) {
@@ -260,6 +264,8 @@ button:disabled {
         linear-gradient(180deg, rgba(255, 255, 255, 0.07), transparent);
       backdrop-filter: blur(10px);
       -webkit-backdrop-filter: blur(10px);
+      -webkit-transform: translate3d(0, 0, 0);
+      transform: translate3d(0, 0, 0);
     }
   }
 
