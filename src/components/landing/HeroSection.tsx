@@ -1,4 +1,3 @@
-import { motion } from 'framer-motion';
 import { ArrowLeft, Atom } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { introPoints, landingAssets } from './landingData';
@@ -9,12 +8,7 @@ export function HeroSection() {
       id="Home"
       className="grid min-h-[calc(100vh-8rem)] scroll-mt-28 items-center gap-12 pb-20 lg:grid-cols-[1.02fr_0.98fr]"
     >
-      <motion.div
-        initial={{ opacity: 0, y: 26 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.7, ease: 'easeOut' }}
-        className="max-w-3xl"
-      >
+      <div style={{ animation: 'heroSlideUp 0.7s ease-out both' }} className="max-w-3xl">
         <div className="mb-2 flex max-w-2xl items-start gap-3 text-sm font-medium text-cyan-100/90 sm:text-base">
           <div className="mt-0.5 shrink-0 rounded-lg bg-cyan-500/10 p-1.5 ring-1 ring-cyan-500/20">
             <Atom className="text-cyan-400" size={16} aria-hidden="true" />
@@ -56,24 +50,18 @@ export function HeroSection() {
             </li>
           ))}
         </ul>
-      </motion.div>
+      </div>
 
-      <motion.div
-        initial={{ scale: 0.94, y: 18 }}
-        animate={{ scale: 1, y: 0 }}
-        transition={{ duration: 0.75, delay: 0.12, ease: 'easeOut' }}
+      <div
+        style={{ animation: 'heroSlideUp 0.75s 0.12s ease-out both' }}
         className="relative flex transform-gpu items-center justify-center p-8 text-center"
       >
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.6, delay: 0.14, ease: 'easeOut' }}
+        <div
+          style={{ animation: 'heroFadeIn 0.6s 0.14s ease-out both' }}
           className="pointer-events-none absolute -inset-6 z-0 rounded-full bg-cyan-500/10 blur-3xl sm:-inset-16"
         />
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.55, delay: 0.22, ease: 'easeOut' }}
+        <div
+          style={{ animation: 'heroSlideUp 0.55s 0.22s ease-out both' }}
           className="relative z-10 w-full"
         >
           <div className="pointer-events-none absolute inset-x-0 -top-16 mx-auto h-44 w-1/2 rounded-full bg-cyan-300/10 blur-3xl" />
@@ -85,8 +73,8 @@ export function HeroSection() {
             loading="eager"
             decoding="async"
           />
-        </motion.div>
-      </motion.div>
+        </div>
+      </div>
     </section>
   );
 }

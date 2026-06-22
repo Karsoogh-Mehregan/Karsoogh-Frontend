@@ -72,13 +72,15 @@ class XOParticle implements Particle {
 export function XOCanvas() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const rafRef = useRef<number | null>(null);
+  const resizeRafRef = useRef<number | null>(null);
   const sizeRef = useRef({ width: 0, height: 0 });
 
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    const ctx = canvas.getContext('2d');
+    // Use alpha:false for a small compositing speedup since we clearRect every frame
+    const ctx = canvas.getContext('2d', { alpha: false });
     if (!ctx) return;
 
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -88,16 +90,18 @@ export function XOCanvas() {
       height: Math.ceil(window.visualViewport?.height || window.innerHeight),
     });
 
+    // Cap DPR at 1.5 — going to 2x or 3x doubles/quadruples pixel fill cost
+    const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+
     const setCanvasSize = () => {
       const { width, height } = getCanvasBounds();
-      const ratio = 1;
 
-      canvas.width = width * ratio;
-      canvas.height = height * ratio;
+      canvas.width = Math.round(width * dpr);
+      canvas.height = Math.round(height * dpr);
       canvas.style.width = `${width}px`;
       canvas.style.height = `${height}px`;
       sizeRef.current = { width, height };
-      ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     };
 
     const particles: Particle[] = [];
@@ -136,34 +140,42 @@ export function XOCanvas() {
       }
     };
 
+    const CONN_DIST = 118;
+    const CONN_DIST_SQ = CONN_DIST * CONN_DIST;
+
     const drawConnections = () => {
       if (sizeRef.current.width < 768) return;
 
+      // Save once outside the loop — ctx.save/restore inside O(n²) is expensive
+      ctx.save();
+      ctx.lineWidth = 1;
       for (let i = 0; i < particles.length; i++) {
         for (let j = i + 1; j < particles.length; j++) {
           const dx = particles[i].x - particles[j].x;
           const dy = particles[i].y - particles[j].y;
-          const distance = Math.sqrt(dx * dx + dy * dy);
+          // Use squared distance to skip sqrt for the majority of pairs
+          const distSq = dx * dx + dy * dy;
 
-          if (distance < 118) {
-            ctx.save();
-            ctx.globalAlpha = (1 - distance / 118) * 0.11;
+          if (distSq < CONN_DIST_SQ) {
+            const distance = Math.sqrt(distSq);
+            ctx.globalAlpha = (1 - distance / CONN_DIST) * 0.11;
             ctx.strokeStyle = particles[i].char === particles[j].char ? '#39D3FF' : '#F9B44A';
-            ctx.lineWidth = 1;
             ctx.beginPath();
             ctx.moveTo(particles[i].x, particles[i].y);
             ctx.lineTo(particles[j].x, particles[j].y);
             ctx.stroke();
-            ctx.restore();
           }
         }
       }
+      ctx.restore();
     };
 
     const animate = () => {
       const { width, height } = sizeRef.current;
 
-      ctx.clearRect(0, 0, width, height);
+      // fillRect instead of clearRect because alpha:false means we don't need transparency
+      ctx.fillStyle = '#060913';
+      ctx.fillRect(0, 0, width, height);
       drawConnections();
       particles.forEach((p) => {
         if (!reducedMotion) {
@@ -180,14 +192,15 @@ export function XOCanvas() {
     };
 
     const handleResize = () => {
-      const { width, height } = getCanvasBounds();
-      // Only resize if the dimensions have actually changed
-      if (width === sizeRef.current.width && height === sizeRef.current.height) {
-        return;
-      }
-
-      resizeParticles(width, height);
-      setCanvasSize();
+      // Throttle resize work to one rAF tick to avoid layout thrashing on every pixel
+      if (resizeRafRef.current) return;
+      resizeRafRef.current = requestAnimationFrame(() => {
+        resizeRafRef.current = null;
+        const { width, height } = getCanvasBounds();
+        if (width === sizeRef.current.width && height === sizeRef.current.height) return;
+        resizeParticles(width, height);
+        setCanvasSize();
+      });
     };
 
     const handleVisibilityChange = () => {
@@ -204,7 +217,7 @@ export function XOCanvas() {
       }
     };
 
-    window.addEventListener('resize', handleResize);
+    window.addEventListener('resize', handleResize, { passive: true });
     window.visualViewport?.addEventListener('resize', handleResize);
     document.addEventListener('visibilitychange', handleVisibilityChange);
 
@@ -217,6 +230,7 @@ export function XOCanvas() {
       window.visualViewport?.removeEventListener('resize', handleResize);
       document.removeEventListener('visibilitychange', handleVisibilityChange);
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
+      if (resizeRafRef.current) cancelAnimationFrame(resizeRafRef.current);
     };
   }, []);
 
@@ -225,6 +239,7 @@ export function XOCanvas() {
       ref={canvasRef}
       aria-hidden="true"
       className="fixed inset-0 z-0 pointer-events-none opacity-55"
+      style={{ willChange: 'transform' }}
     />
   );
 }

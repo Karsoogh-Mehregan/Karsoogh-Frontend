@@ -59,6 +59,7 @@ export function TeamSection() {
               <img
                 src={member.image}
                 alt={member.fullName}
+                style={{ willChange: 'transform' }}
                 className="h-56 w-full object-cover object-top transition-transform duration-500 ease-out group-hover:scale-110 md:h-64"
                 loading="lazy"
                 decoding="async"

@@ -1,6 +1,5 @@
 import { useAuth } from '@/context/AuthContext';
 import { authService } from '@/services/authService';
-import { motion } from 'framer-motion';
 import { AlertCircle, ArrowLeft, Eye, EyeOff, LockKeyhole, UserRound } from 'lucide-react';
 import { useEffect, useState, type FormEvent } from 'react';
 import toast from 'react-hot-toast';
@@ -56,10 +55,8 @@ export default function LoginPage() {
     <div className="lab-shell grid min-h-screen place-items-center px-5 py-10" dir="rtl" lang="fa">
       <div className="absolute inset-x-0 top-0 mx-auto h-48 max-w-4xl bg-cyan-300/10 blur-3xl" />
 
-      <motion.div
-        initial={{ opacity: 0, y: 24 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.55, ease: 'easeOut' }}
+      <div
+        style={{ animation: 'heroSlideUp 0.55s ease-out both' }}
         className="relative w-full max-w-md"
       >
         <Link
@@ -140,7 +137,7 @@ export default function LoginPage() {
             {isLoading ? 'در حال ورود...' : 'ورود به پنل'}
           </button>
         </form>
-      </motion.div>
+      </div>
     </div>
   );
 }
