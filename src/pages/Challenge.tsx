@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import toast from 'react-hot-toast';
+import { Lock } from 'lucide-react';
 import { challengeService } from '@/services/challengeService';
 import Skeleton from '@/components/Skeleton';
 
@@ -46,8 +47,9 @@ export function Challenge() {
   const [pageTitle, setPageTitle] = useState('');
   const [description, setDescription] = useState('');
   const [regex, setRegex] = useState('');
+  const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [fetchLoading, setFetchLoading] = useState(!slug);
+  const [fetchLoading, setFetchLoading] = useState(true);
   const [fieldsData, setFieldsData] = useState({
     firstname: '',
     lastname: '',
@@ -60,7 +62,22 @@ export function Challenge() {
 
   useEffect(() => {
     if (slug) {
-      return;
+      // Fetch by slug (navigated from list)
+      challengeService
+        .getChallenge(slug)
+        .then((challenge) => {
+          setPageTitle(challenge.title);
+          setDescription(challenge.description);
+          setIsOpen(challenge.is_open);
+        })
+        .catch((error) => {
+          console.error('Error fetching challenge:', error);
+          toast.remove();
+          toast.error(error.message || 'خطا در دریافت چالش');
+        })
+        .finally(() => {
+          setFetchLoading(false);
+        });
     } else {
       challengeService
         .getLatestChallenge()
@@ -69,6 +86,7 @@ export function Challenge() {
           setPageTitle(latestChallenge.title);
           setDescription(latestChallenge.description);
           if (latestChallenge.regex) setRegex(latestChallenge.regex);
+          setIsOpen(true); // latest endpoint only returns active challenges
         })
         .catch((error) => {
           console.error('Error fetching latest challenge:', error);
@@ -184,126 +202,138 @@ export function Challenge() {
         />
       )}
 
-      <form onSubmit={handleSubmit} className="lab-card mt-12 overflow-hidden p-6 md:p-8">
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          <div>
-            <label htmlFor="firstname" className="mb-2 block text-sm font-bold text-slate-300">
-              نام
-            </label>
-            <input
-              id="firstname"
-              name="firstname"
-              type="text"
-              value={fieldsData.firstname}
-              onChange={handleInputChange}
-              className="w-full rounded-xl border border-white/10 bg-slate-900/50 p-3 text-white placeholder-slate-500 focus:border-cyan-500 focus:outline-none focus:ring-1 focus:ring-cyan-500"
-              placeholder="نام خود را وارد کنید"
-            />
+      {isOpen ? (
+        <form onSubmit={handleSubmit} className="lab-card mt-12 overflow-hidden p-6 md:p-8">
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            <div>
+              <label htmlFor="firstname" className="mb-2 block text-sm font-bold text-slate-300">
+                نام
+              </label>
+              <input
+                id="firstname"
+                name="firstname"
+                type="text"
+                value={fieldsData.firstname}
+                onChange={handleInputChange}
+                className="w-full rounded-xl border border-white/10 bg-slate-900/50 p-3 text-white placeholder-slate-500 focus:border-cyan-500 focus:outline-none focus:ring-1 focus:ring-cyan-500"
+                placeholder="نام خود را وارد کنید"
+              />
+            </div>
+            <div>
+              <label htmlFor="lastname" className="mb-2 block text-sm font-bold text-slate-300">
+                نام خانوادگی
+              </label>
+              <input
+                id="lastname"
+                name="lastname"
+                type="text"
+                value={fieldsData.lastname}
+                onChange={handleInputChange}
+                className="w-full rounded-xl border border-white/10 bg-slate-900/50 p-3 text-white placeholder-slate-500 focus:border-cyan-500 focus:outline-none focus:ring-1 focus:ring-cyan-500"
+                placeholder="نام خانوادگی خود را وارد کنید"
+              />
+            </div>
+            <div>
+              <label htmlFor="phone" className="mb-2 block text-sm font-bold text-slate-300">
+                شماره تلفن
+              </label>
+              <input
+                id="phone"
+                name="phone"
+                type="tel"
+                value={fieldsData.phone}
+                onChange={handleInputChange}
+                className="w-full rounded-xl border border-white/10 bg-slate-900/50 p-3 text-white placeholder-slate-500 focus:border-cyan-500 focus:outline-none focus:ring-1 focus:ring-cyan-500"
+                placeholder="۰۹۱۲۳۴۵۶۷۸۹"
+                dir="ltr"
+              />
+            </div>
+            <div>
+              <label htmlFor="city" className="mb-2 block text-sm font-bold text-slate-300">
+                شهر
+              </label>
+              <input
+                id="city"
+                name="city"
+                type="text"
+                value={fieldsData.city}
+                onChange={handleInputChange}
+                className="w-full rounded-xl border border-white/10 bg-slate-900/50 p-3 text-white placeholder-slate-500 focus:border-cyan-500 focus:outline-none focus:ring-1 focus:ring-cyan-500"
+                placeholder="مثلاً اصفهان"
+              />
+            </div>
+            <div>
+              <label htmlFor="school" className="mb-2 block text-sm font-bold text-slate-300">
+                مدرسه
+              </label>
+              <input
+                id="school"
+                name="school"
+                type="text"
+                value={fieldsData.school}
+                onChange={handleInputChange}
+                className="w-full rounded-xl border border-white/10 bg-slate-900/50 p-3 text-white placeholder-slate-500 focus:border-cyan-500 focus:outline-none focus:ring-1 focus:ring-cyan-500"
+                placeholder="نام مدرسه"
+              />
+            </div>
+            <div>
+              <label htmlFor="grade" className="mb-2 block text-sm font-bold text-slate-300">
+                پایه تحصیلی
+              </label>
+              <select
+                id="grade"
+                name="grade"
+                value={fieldsData.grade}
+                onChange={handleInputChange}
+                className="w-full rounded-xl border border-white/10 bg-slate-900/50 p-3 text-white focus:border-cyan-500 focus:outline-none focus:ring-1 focus:ring-cyan-500"
+              >
+                <option value="7" className="bg-slate-900">
+                  هفتم
+                </option>
+                <option value="8" className="bg-slate-900">
+                  هشتم
+                </option>
+                <option value="9" className="bg-slate-900">
+                  نهم
+                </option>
+              </select>
+            </div>
+            <div className="md:col-span-2 lg:col-span-3">
+              <label htmlFor="message" className="mb-2 block text-sm font-bold text-slate-300">
+                متن پاسخ
+              </label>
+              <textarea
+                id="message"
+                name="message"
+                rows={5}
+                value={fieldsData.message}
+                onChange={handleInputChange}
+                className="w-full resize-y rounded-xl border border-white/10 bg-slate-900/50 p-3 text-white placeholder-slate-500 focus:border-cyan-500 focus:outline-none focus:ring-1 focus:ring-cyan-500"
+                placeholder="پاسخ خود را بنویسید ..."
+              ></textarea>
+            </div>
           </div>
-          <div>
-            <label htmlFor="lastname" className="mb-2 block text-sm font-bold text-slate-300">
-              نام خانوادگی
-            </label>
-            <input
-              id="lastname"
-              name="lastname"
-              type="text"
-              value={fieldsData.lastname}
-              onChange={handleInputChange}
-              className="w-full rounded-xl border border-white/10 bg-slate-900/50 p-3 text-white placeholder-slate-500 focus:border-cyan-500 focus:outline-none focus:ring-1 focus:ring-cyan-500"
-              placeholder="نام خانوادگی خود را وارد کنید"
-            />
-          </div>
-          <div>
-            <label htmlFor="phone" className="mb-2 block text-sm font-bold text-slate-300">
-              شماره تلفن
-            </label>
-            <input
-              id="phone"
-              name="phone"
-              type="tel"
-              value={fieldsData.phone}
-              onChange={handleInputChange}
-              className="w-full rounded-xl border border-white/10 bg-slate-900/50 p-3 text-white placeholder-slate-500 focus:border-cyan-500 focus:outline-none focus:ring-1 focus:ring-cyan-500"
-              placeholder="۰۹۱۲۳۴۵۶۷۸۹"
-              dir="ltr"
-            />
-          </div>
-          <div>
-            <label htmlFor="city" className="mb-2 block text-sm font-bold text-slate-300">
-              شهر
-            </label>
-            <input
-              id="city"
-              name="city"
-              type="text"
-              value={fieldsData.city}
-              onChange={handleInputChange}
-              className="w-full rounded-xl border border-white/10 bg-slate-900/50 p-3 text-white placeholder-slate-500 focus:border-cyan-500 focus:outline-none focus:ring-1 focus:ring-cyan-500"
-              placeholder="مثلاً اصفهان"
-            />
-          </div>
-          <div>
-            <label htmlFor="school" className="mb-2 block text-sm font-bold text-slate-300">
-              مدرسه
-            </label>
-            <input
-              id="school"
-              name="school"
-              type="text"
-              value={fieldsData.school}
-              onChange={handleInputChange}
-              className="w-full rounded-xl border border-white/10 bg-slate-900/50 p-3 text-white placeholder-slate-500 focus:border-cyan-500 focus:outline-none focus:ring-1 focus:ring-cyan-500"
-              placeholder="نام مدرسه"
-            />
-          </div>
-          <div>
-            <label htmlFor="grade" className="mb-2 block text-sm font-bold text-slate-300">
-              پایه تحصیلی
-            </label>
-            <select
-              id="grade"
-              name="grade"
-              value={fieldsData.grade}
-              onChange={handleInputChange}
-              className="w-full rounded-xl border border-white/10 bg-slate-900/50 p-3 text-white focus:border-cyan-500 focus:outline-none focus:ring-1 focus:ring-cyan-500"
+          <div className="mt-8 flex justify-end">
+            <button
+              type="submit"
+              disabled={loading}
+              className="lab-button-primary w-full disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto"
             >
-              <option value="7" className="bg-slate-900">
-                هفتم
-              </option>
-              <option value="8" className="bg-slate-900">
-                هشتم
-              </option>
-              <option value="9" className="bg-slate-900">
-                نهم
-              </option>
-            </select>
+              {loading ? 'در حال ارسال ...' : 'ارسال پاسخ'}
+            </button>
           </div>
-          <div className="md:col-span-2 lg:col-span-3">
-            <label htmlFor="message" className="mb-2 block text-sm font-bold text-slate-300">
-              متن پاسخ
-            </label>
-            <textarea
-              id="message"
-              name="message"
-              rows={5}
-              value={fieldsData.message}
-              onChange={handleInputChange}
-              className="w-full resize-y rounded-xl border border-white/10 bg-slate-900/50 p-3 text-white placeholder-slate-500 focus:border-cyan-500 focus:outline-none focus:ring-1 focus:ring-cyan-500"
-              placeholder="پاسخ خود را بنویسید ..."
-            ></textarea>
+        </form>
+      ) : pageTitle ? (
+        <div className="mt-12 flex flex-col items-center justify-center gap-4 rounded-2xl border border-white/[0.08] bg-white/[0.02] p-10 text-center">
+          <div className="grid h-16 w-16 place-items-center rounded-full bg-slate-500/10">
+            <Lock size={28} className="text-slate-400" />
           </div>
+          <p className="text-lg font-bold text-slate-300">این چالش در حال حاضر فعال نیست</p>
+          <p className="text-sm text-slate-500">
+            زمان ثبت پاسخ به پایان رسیده یا هنوز شروع نشده است.
+          </p>
         </div>
-        <div className="mt-8 flex justify-end">
-          <button
-            type="submit"
-            disabled={loading}
-            className="lab-button-primary w-full disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto"
-          >
-            {loading ? 'در حال ارسال ...' : 'ارسال پاسخ'}
-          </button>
-        </div>
-      </form>
+      ) : null}
     </main>
   );
 }
