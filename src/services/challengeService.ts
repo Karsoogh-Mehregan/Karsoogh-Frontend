@@ -5,6 +5,9 @@ export interface ChallengeData {
   title: string;
   description: string;
   regex?: string;
+  is_open: boolean;
+  start_date?: string;
+  end_date?: string;
 }
 
 export interface ChallengeListItem {
@@ -21,7 +24,7 @@ export const challengeService = {
     return apiClient.get<ChallengeData>('/challenges/latest/');
   },
   getChallenge: (slug: string) => {
-    return apiClient.get<ChallengeListItem>(`/challenges/${slug}/`);
+    return apiClient.get<ChallengeData>(`/challenges/${slug}/`);
   },
   getChallenges: () => {
     return apiClient.get<ChallengeListItem[]>('/challenges/');

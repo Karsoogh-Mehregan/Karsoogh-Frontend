@@ -68,6 +68,7 @@ export function Challenge() {
         .then((challenge) => {
           setPageTitle(challenge.title);
           setDescription(challenge.description);
+          if (challenge.regex) setRegex(challenge.regex);
           setIsOpen(challenge.is_open);
         })
         .catch((error) => {
