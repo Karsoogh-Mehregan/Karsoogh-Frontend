@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { FileText, CheckCircle2, ChevronRight, ChevronLeft, Search } from 'lucide-react';
 import { apiClient } from '@/services/api';
-import SelectedSubmissionId from '@/pages/selectedSubmissionId';
+import SelectedSubmissionId from '@/pages/SelectedSubmissionId';
 
 type QuestionTab = 'Announcement' | 'q3' | 'q4' | 'q5';
 

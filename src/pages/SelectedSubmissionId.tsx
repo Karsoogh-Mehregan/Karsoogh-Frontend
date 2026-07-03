@@ -196,7 +196,7 @@ export default function SelectedSubmissionId({ submissionId, onBack }: Submissio
             ) : (
               <div className="flex-1 w-full flex flex-col items-center justify-center gap-4 bg-slate-900 rounded-xl p-4 text-center">
                 <FileText size={48} className="text-slate-500" />
-                <p className="text-white font-bold text-sm">این فرمت قابل پیش‌نمایش نیست.</p>
+                <p className="text-white font-bold text-sm">این فرمت قابل پیش‌نمایش نdیست.</p>
                 <a
                   href={submission.file}
                   download
