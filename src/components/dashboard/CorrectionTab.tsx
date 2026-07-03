@@ -36,6 +36,8 @@ interface PaginatedResponse<T> {
   results: T[];
 }
 
+type FilterType = 'all' | 'graded' | 'ungraded';
+
 export default function CorrectionTab() {
   const [activeQuestion, setActiveQuestion] = useState<QuestionTab>('Announcement');
   const [submissions, setSubmissions] = useState<Submission[]>([]);
@@ -52,6 +54,8 @@ export default function CorrectionTab() {
 
   const [selectedSubmissionId, setSelectedSubmissionId] = useState<number | null>(null);
 
+  const [filterStatus, setFilterStatus] = useState<FilterType>('all');
+
   useEffect(() => {
     const timer = setTimeout(() => {
       setDebouncedSearch(searchInput);
@@ -62,13 +66,25 @@ export default function CorrectionTab() {
   }, [searchInput]);
 
   const fetchSubmissions = useCallback(
-    async (tab: Exclude<QuestionTab, 'Announcement'>, page: number, searchQuery: string) => {
+    async (
+      tab: Exclude<QuestionTab, 'Announcement'>,
+      page: number,
+      searchQuery: string,
+      filter: FilterType,
+    ) => {
       setIsLoading(true);
       setError(null);
       try {
         const questionId = questionIdMap[tab];
 
-        let url = `/exams/submissions/?question=${questionId}&page=${page}&graded=${false}`;
+        let url = `/exams/submissions/?question=${questionId}&page=${page}`;
+
+        if (filter === 'graded') {
+          url += `&graded=true`;
+        } else if (filter === 'ungraded') {
+          url += `&graded=false`;
+        }
+
         if (searchQuery.trim() !== '') {
           url = `/exams/submissions/?id=${Number(searchQuery)}`;
         }
@@ -95,7 +111,7 @@ export default function CorrectionTab() {
 
     const loadData = async () => {
       if (isMounted) {
-        await fetchSubmissions(activeQuestion, currentPage, debouncedSearch);
+        await fetchSubmissions(activeQuestion, currentPage, debouncedSearch, filterStatus);
       }
     };
 
@@ -104,7 +120,7 @@ export default function CorrectionTab() {
     return () => {
       isMounted = false;
     };
-  }, [activeQuestion, fetchSubmissions, currentPage, debouncedSearch]);
+  }, [activeQuestion, fetchSubmissions, currentPage, debouncedSearch, filterStatus]);
 
   const handleTabChange = (tabId: QuestionTab) => {
     setActiveQuestion(tabId);
@@ -135,7 +151,7 @@ export default function CorrectionTab() {
         onBack={() => {
           setSelectedSubmissionId(null);
           if (activeQuestion !== 'Announcement') {
-            void fetchSubmissions(activeQuestion, currentPage, debouncedSearch);
+            void fetchSubmissions(activeQuestion, currentPage, debouncedSearch, filterStatus);
           }
         }}
       />
@@ -176,7 +192,49 @@ export default function CorrectionTab() {
 
         {activeQuestion !== 'Announcement' && (
           <div className="flex flex-col gap-3">
-            {/* ۵. باکس سرچ در بالای سابمیشن‌ها */}
+            <div className="flex justify-start mb-2">
+              <div className="flex items-center gap-1.5 bg-white/5 border border-white/10 p-1 rounded-xl w-fit mb-2">
+                <button
+                  onClick={() => {
+                    setFilterStatus('all');
+                    setCurrentPage(1);
+                  }}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
+                    filterStatus === 'all'
+                      ? 'bg-white/10 text-white border border-white/10'
+                      : 'text-slate-400 hover:text-slate-200'
+                  }`}
+                >
+                  همه پاسخ‌ها
+                </button>
+                <button
+                  onClick={() => {
+                    setFilterStatus('graded');
+                    setCurrentPage(1);
+                  }}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
+                    filterStatus === 'graded'
+                      ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
+                      : 'text-slate-400 hover:text-emerald-400'
+                  }`}
+                >
+                  تصحیح شده
+                </button>
+                <button
+                  onClick={() => {
+                    setFilterStatus('ungraded');
+                    setCurrentPage(1);
+                  }}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
+                    filterStatus === 'ungraded'
+                      ? 'bg-amber-500/20 text-amber-400 border border-amber-500/30'
+                      : 'text-slate-400 hover:text-amber-400'
+                  }`}
+                >
+                  منتظر تصحیح
+                </button>
+              </div>
+            </div>
             <div className="relative w-full mb-2">
               <Search
                 className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400"
