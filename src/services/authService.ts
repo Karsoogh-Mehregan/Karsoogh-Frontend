@@ -25,6 +25,7 @@ export interface User {
   city?: City | null;
   province?: Province | null;
   phone: string;
+  is_staff: boolean;
 }
 
 export interface LoginCredentials {

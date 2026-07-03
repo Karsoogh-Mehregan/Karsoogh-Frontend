@@ -72,7 +72,7 @@ export default function DashboardSidebar({
     { id: 'profile' as Tab, label: 'پروفایل من', icon: UserRound },
     { id: 'resources' as Tab, label: 'منابع', icon: FolderOpen },
     { id: 'challenges' as Tab, label: 'چالش‌ها', icon: Trophy },
-    { id: 'correction' as Tab, label: 'تصحیح', icon: ClipboardCheck },
+    ...(user?.is_staff ? [{ id: 'correction' as Tab, label: 'تصحیح', icon: ClipboardCheck }] : []),
   ];
 
   return (

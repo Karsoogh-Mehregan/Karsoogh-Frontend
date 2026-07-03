@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { FileText, CheckCircle2, ChevronRight, ChevronLeft } from 'lucide-react';
+import { FileText, CheckCircle2, ChevronRight, ChevronLeft, Search } from 'lucide-react';
 import { apiClient } from '@/services/api';
 
 type QuestionTab = 'Announcement' | 'q3' | 'q4' | 'q5';
@@ -47,15 +47,33 @@ export default function CorrectionTab() {
   const [hasNext, setHasNext] = useState(false);
   const [hasPrevious, setHasPrevious] = useState(false);
 
+  const [searchInput, setSearchInput] = useState('');
+  const [debouncedSearch, setDebouncedSearch] = useState('');
+
+  const [validSearchInput, setValidSearchInput] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearch(searchInput);
+      setCurrentPage(1);
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, [searchInput]);
+
   const fetchSubmissions = useCallback(
-    async (tab: Exclude<QuestionTab, 'Announcement'>, page: number) => {
+    async (tab: Exclude<QuestionTab, 'Announcement'>, page: number, searchQuery: string) => {
       setIsLoading(true);
       setError(null);
       try {
         const questionId = questionIdMap[tab];
-        const data = await apiClient.get<PaginatedResponse<Submission>>(
-          `/exams/submissions/?question=${questionId}&page=${page}`,
-        );
+
+        let url = `/exams/submissions/?question=${questionId}&page=${page}`;
+        if (searchQuery.trim() !== '') {
+          url = `/exams/submissions/?id=${Number(searchQuery)}`;
+        }
+
+        const data = await apiClient.get<PaginatedResponse<Submission>>(url);
         setSubmissions(data.results || []);
         setHasNext(!!data.next);
         setHasPrevious(!!data.previous);
@@ -77,7 +95,7 @@ export default function CorrectionTab() {
 
     const loadData = async () => {
       if (isMounted) {
-        await fetchSubmissions(activeQuestion, currentPage);
+        await fetchSubmissions(activeQuestion, currentPage, debouncedSearch);
       }
     };
 
@@ -86,7 +104,7 @@ export default function CorrectionTab() {
     return () => {
       isMounted = false;
     };
-  }, [activeQuestion, fetchSubmissions, currentPage]);
+  }, [activeQuestion, fetchSubmissions, currentPage, debouncedSearch]);
 
   const getScoreInput = (submission: Submission) =>
     scoreInputs[submission.id] ?? (submission.grade !== null ? String(submission.grade) : '');
@@ -119,6 +137,24 @@ export default function CorrectionTab() {
     }
   };
 
+  const handleTabChange = (tabId: QuestionTab) => {
+    setActiveQuestion(tabId);
+    setCurrentPage(1);
+    setSearchInput('');
+    setDebouncedSearch('');
+  };
+
+  const handleSearchInput = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = event.target.value;
+    setSearchInput(value);
+
+    setValidSearchInput(true);
+
+    if (!/^\d+$/.test(value) && value.length !== 0) {
+      setValidSearchInput(false);
+    }
+  };
+
   const handleCardClick = (fileUrl: string) => {
     window.open(fileUrl, '_blank', 'noopener,noreferrer');
   };
@@ -134,7 +170,7 @@ export default function CorrectionTab() {
           return (
             <button
               key={tab.id}
-              onClick={() => setActiveQuestion(tab.id)}
+              onClick={() => handleTabChange(tab.id)}
               className={`px-4 py-2 rounded-xl text-sm font-bold transition-colors ${
                 isActive
                   ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/30'
@@ -157,20 +193,40 @@ export default function CorrectionTab() {
 
         {activeQuestion !== 'Announcement' && (
           <div className="flex flex-col gap-3">
-            {isLoading && <p className="text-slate-400">در حال بارگذاری...</p>}
+            {/* ۵. باکس سرچ در بالای سابمیشن‌ها */}
+            <div className="relative w-full mb-2">
+              <Search
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400"
+                size={18}
+              />
+              <input
+                type="text"
+                value={searchInput}
+                onChange={handleSearchInput}
+                placeholder="جستجوی شناسه ..."
+                className="w-full rounded-xl bg-white/5 border border-white/10 pr-10 pl-4 py-3 text-sm text-white placeholder:text-slate-500 focus:outline-none focus:border-cyan-500/50 transition-colors"
+              />
+            </div>
 
-            {error && !isLoading && (
+            {!validSearchInput && (
+              <p className="text-slate-400">داخل باکس جستجو فقط باید عدد باشد!</p>
+            )}
+
+            {isLoading && validSearchInput && <p className="text-slate-400">در حال بارگذاری...</p>}
+
+            {error && !isLoading && validSearchInput && (
               <p className="text-rose-400 bg-rose-500/10 border border-rose-500/30 rounded-xl p-3">
                 {error}
               </p>
             )}
 
-            {!isLoading && !error && submissions.length === 0 && (
+            {!isLoading && !error && validSearchInput && submissions.length === 0 && (
               <p className="text-slate-400">هیچ پاسخی برای این سوال ارسال نشده است.</p>
             )}
 
             {!isLoading &&
               !error &&
+              validSearchInput &&
               submissions.map((submission) => {
                 const isSaving = savingIds.has(submission.id);
                 return (
@@ -218,7 +274,7 @@ export default function CorrectionTab() {
                 );
               })}
 
-            {!isLoading && !error && submissions.length > 0 && (
+            {!isLoading && !error && validSearchInput && submissions.length > 0 && (
               <div className="flex items-center justify-center gap-4 mt-6 pt-4 border-t border-white/10">
                 <button
                   onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
