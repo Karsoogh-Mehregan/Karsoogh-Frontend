@@ -19,17 +19,22 @@ export interface ChallengeListItem {
   end_date: string;
 }
 
-export const challengeService = {
-  getLatestChallenge: () => {
+class ChallengeService {
+  async getLatestChallenge() {
     return apiClient.get<ChallengeData>('/challenges/latest/');
-  },
-  getChallenge: (slug: string) => {
+  }
+
+  async getChallenge(slug: string) {
     return apiClient.get<ChallengeData>(`/challenges/${slug}/`);
-  },
-  getChallenges: () => {
+  }
+
+  async getChallenges() {
     return apiClient.get<ChallengeListItem[]>('/challenges/');
-  },
-  submitChallenge: (slug: string, data: FormData) => {
+  }
+
+  async submitChallenge(slug: string, data: FormData) {
     return apiClient.postFormData<unknown>(`/challenges/${slug}/submit/`, data);
-  },
-};
+  }
+}
+
+export const challengeService = new ChallengeService();

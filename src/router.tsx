@@ -89,6 +89,13 @@ const router = createBrowserRouter([
           return { Component: Dashboard };
         },
       },
+      {
+        path: '/dashboard/submission/:submissionId',
+        lazy: async () => {
+          const { default: SelectedSubmissionId } = await import('@/pages/SelectedSubmissionId');
+          return { Component: SelectedSubmissionId };
+        },
+      },
     ],
   },
 

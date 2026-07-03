@@ -1,11 +1,20 @@
 import { useAuth } from '@/context/AuthContext';
 import { authService } from '@/services/authService';
-import { LogOut, UserRound, FolderOpen, Trophy, ChevronRight, X, Menu } from 'lucide-react';
+import {
+  LogOut,
+  UserRound,
+  FolderOpen,
+  Trophy,
+  ChevronRight,
+  X,
+  Menu,
+  ClipboardCheck,
+} from 'lucide-react';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 
-type Tab = 'profile' | 'resources' | 'challenges';
+type Tab = 'profile' | 'resources' | 'challenges' | 'correction';
 
 interface DashboardSidebarProps {
   activeTab: Tab;
@@ -63,6 +72,7 @@ export default function DashboardSidebar({
     { id: 'profile' as Tab, label: 'پروفایل من', icon: UserRound },
     { id: 'resources' as Tab, label: 'منابع', icon: FolderOpen },
     { id: 'challenges' as Tab, label: 'چالش‌ها', icon: Trophy },
+    ...(user?.is_staff ? [{ id: 'correction' as Tab, label: 'تصحیح', icon: ClipboardCheck }] : []),
   ];
 
   return (

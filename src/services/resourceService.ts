@@ -11,8 +11,10 @@ export interface DashboardResource {
   is_new?: boolean;
 }
 
-export const resourceService = {
-  getResources: () => {
+class ResourceService {
+  async getResources() {
     return apiClient.get<DashboardResource[]>('/auth/dashboard/resources/');
-  },
-};
+  }
+}
+
+export const resourceService = new ResourceService();
