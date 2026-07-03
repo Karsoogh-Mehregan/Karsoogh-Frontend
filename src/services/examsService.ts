@@ -9,6 +9,7 @@ export interface Submission {
   file: string;
   grade: number | null;
   max_grade: number | null;
+  description: string | null;
 }
 
 export interface PaginatedResponse<T> {
@@ -32,9 +33,10 @@ class SubmissionService {
     return apiClient.get<Submission>(`/exams/submissions/${submissionId}/`);
   }
 
-  async gradeSubmission(submissionId: number, grade: number) {
-    return apiClient.post<Submission>(`/exams/submissions/${submissionId}/`, {
+  async gradeSubmission(submissionId: number, grade: number, description: string) {
+    return apiClient.patch<Submission>(`/exams/submissions/${submissionId}/`, {
       grade,
+      description,
     });
   }
 

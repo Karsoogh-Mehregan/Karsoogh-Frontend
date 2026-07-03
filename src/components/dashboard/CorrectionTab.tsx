@@ -1,12 +1,12 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FileText, CheckCircle2, ChevronRight, ChevronLeft, Search } from 'lucide-react';
-import { submissionService, type Submission, type FilterType } from '@/services/submissionService';
+import { submissionService, type Submission, type FilterType } from '@/services/examsService';
 
 type QuestionTab = 'Announcement' | 'q3' | 'q4' | 'q5';
 
 const questionTabs: { id: QuestionTab; label: string }[] = [
-  { id: 'Announcement', label: 'اطلاعیه' },
+  // { id: 'Announcement', label: 'اطلاعیه' },
   { id: 'q3', label: 'سوال سوم' },
   { id: 'q4', label: 'سوال چهارم' },
   { id: 'q5', label: 'سوال پنجم' },
@@ -25,6 +25,7 @@ export default function CorrectionTab() {
   const [error, setError] = useState<string | null>(null);
 
   const [currentPage, setCurrentPage] = useState(1);
+  const [totalCount, setTotalCount] = useState(0);
   const [hasNext, setHasNext] = useState(false);
   const [hasPrevious, setHasPrevious] = useState(false);
 
@@ -65,11 +66,13 @@ export default function CorrectionTab() {
           searchId,
         });
         setSubmissions(data.results || []);
+        setTotalCount(data.count || 0);
         setHasNext(!!data.next);
         setHasPrevious(!!data.previous);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'خطا در دریافت اطلاعات.');
         setSubmissions([]);
+        setTotalCount(0);
         setHasNext(false);
         setHasPrevious(false);
       } finally {
@@ -152,7 +155,7 @@ export default function CorrectionTab() {
 
         {activeQuestion !== 'Announcement' && (
           <div className="flex flex-col gap-3">
-            <div className="flex justify-start">
+            <div className="flex justify-start gap-3">
               <div className="flex items-center gap-1.5 bg-white/5 border border-white/10 p-1 rounded-xl w-fit ">
                 <button
                   onClick={() => {
@@ -195,7 +198,7 @@ export default function CorrectionTab() {
                 </button>
               </div>
 
-              <div className="relative mr-2">
+              <div className="relative">
                 <Search
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400"
                   size={18}
@@ -208,6 +211,15 @@ export default function CorrectionTab() {
                   className="w-full rounded-xl bg-white/5 border border-white/10 pr-10 pl-4 py-3 text-sm text-white placeholder:text-slate-500 focus:outline-none focus:border-cyan-500/50 transition-colors"
                 />
               </div>
+
+              {!isLoading && !error && validSearchInput && submissions.length > 0 && (
+                <div className="flex items-center gap-2 text-sm text-slate-400">
+                  <span className="bg-white/5 border border-white/10 px-2.5 py-1 rounded-lg font-bold text-slate-300">
+                    {totalCount}
+                  </span>
+                  <span>پاسخ</span>
+                </div>
+              )}
             </div>
 
             {!validSearchInput && (
@@ -249,7 +261,16 @@ export default function CorrectionTab() {
                       {submission.grade !== null && (
                         <span className="flex items-center gap-1.5 text-sm font-bold text-emerald-400 bg-emerald-500/10 px-3 py-1 rounded-lg">
                           <CheckCircle2 size={14} />
-                          نمره: {submission.grade}
+                          نمره:{' '}
+                          <span dir="ltr">
+                            {submission.grade}
+                            {submission.max_grade !== null && ` / ${submission.max_grade}`}
+                          </span>
+                        </span>
+                      )}
+                      {submission.grade === null && submission.max_grade !== null && (
+                        <span className="text-sm font-bold text-slate-400 bg-white/5 px-3 py-1 rounded-lg">
+                          حداکثر: <span dir="ltr">{submission.max_grade}</span>
                         </span>
                       )}
                     </div>

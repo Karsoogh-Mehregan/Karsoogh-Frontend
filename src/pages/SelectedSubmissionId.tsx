@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { submissionService, type Submission } from '@/services/submissionService';
+import { submissionService, type Submission } from '@/services/examsService';
 import { CheckCircle2, FileText, ArrowRight, RotateCw, RotateCcw } from 'lucide-react';
 
 export default function SelectedSubmissionId() {
@@ -12,6 +12,7 @@ export default function SelectedSubmissionId() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [scoreInput, setScoreInput] = useState('');
+  const [descriptionInput, setDescriptionInput] = useState('');
   const [isSaving, setIsSaving] = useState(false);
   const [rotation, setRotation] = useState(0);
 
@@ -24,6 +25,9 @@ export default function SelectedSubmissionId() {
         setSubmission(data);
         if (data.grade !== null) {
           setScoreInput(String(data.grade));
+        }
+        if (data.description) {
+          setDescriptionInput(data.description);
         }
       } catch (err) {
         setError(err instanceof Error ? err.message : 'خطا در دریافت اطلاعات سابمیشن.');
@@ -41,7 +45,11 @@ export default function SelectedSubmissionId() {
 
     setIsSaving(true);
     try {
-      const updated = await submissionService.gradeSubmission(submissionId, parsedScore);
+      const updated = await submissionService.gradeSubmission(
+        submissionId,
+        parsedScore,
+        descriptionInput,
+      );
       setSubmission(updated);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'خطا در ثبت نمره.');
@@ -93,49 +101,71 @@ export default function SelectedSubmissionId() {
           <section className="mx-auto max-w-5xl">
             <div className="lab-card p-6 md:p-8">
               <div className="flex flex-col h-[calc(100vh-10rem)] gap-4">
-                <div className="flex items-center justify-between border-b border-white/10 pb-4 shrink-0">
-                  <div className="flex items-center gap-4">
-                    <button
-                      onClick={onBack}
-                      className="flex items-center justify-center p-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-white transition-colors"
-                      title="بازگشت"
-                    >
-                      <ArrowRight size={20} />
-                    </button>
-                    <div>
-                      <h3 className="text-xl font-black text-white">
-                        بررسی پاسخ شناسه {submission?.id}
-                      </h3>
-                      <p className="text-sm text-slate-400 mt-1">{submission?.question_name}</p>
+                <div className="flex flex-col gap-4 border-b border-white/10 pb-4 shrink-0">
+                  <div className="flex items-start justify-between">
+                    <div className="flex items-center gap-4">
+                      <button
+                        onClick={onBack}
+                        className="flex items-center justify-center p-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-white transition-colors"
+                        title="بازگشت"
+                      >
+                        <ArrowRight size={20} />
+                      </button>
+                      <div>
+                        <h3 className="text-xl font-black text-white">
+                          بررسی پاسخ شناسه {submission?.id}
+                        </h3>
+                        <p className="text-sm text-slate-400 mt-1">{submission?.question_name}</p>
+                      </div>
                     </div>
-                  </div>
 
-                  {/* باکس ثبت نمره (بدون دکمه‌های چرخش) */}
-                  <div className="flex items-center gap-3">
-                    <div className="flex items-center gap-3 bg-white/5 border border-white/10 p-3 rounded-xl">
-                      <input
-                        type="number"
-                        value={scoreInput}
-                        onChange={(e) => setScoreInput(e.target.value)}
-                        placeholder="نمره"
-                        disabled={isSaving}
-                        className="w-24 rounded-lg bg-white/5 border border-white/10 px-3 py-2 text-sm text-white placeholder:text-slate-500 focus:outline-none focus:border-cyan-500/50 disabled:opacity-50 no-spinner"
-                      />
+                    {/* باکس ثبت نمره */}
+                    <div className="flex items-start gap-3">
+                      <div className="flex flex-col gap-2">
+                        <div className="flex items-stretch bg-white/5 border border-white/10 rounded-xl overflow-hidden focus-within:border-cyan-500/50 transition-colors">
+                          <div
+                            className="flex items-center justify-center px-3 bg-white/10 text-sm font-bold text-slate-400 border-r border-white/10"
+                            dir="ltr"
+                          >
+                            / {submission?.max_grade !== null ? submission?.max_grade : '-'}
+                          </div>
+                          <input
+                            type="number"
+                            value={scoreInput}
+                            onChange={(e) => setScoreInput(e.target.value)}
+                            placeholder="نمره"
+                            disabled={isSaving}
+                            className="w-24 bg-transparent px-3 py-2 text-sm text-white placeholder:text-slate-500 focus:outline-none disabled:opacity-50 no-spinner text-center"
+                          />
+                        </div>
+                        {submission?.grade !== null && (
+                          <span className="flex items-center justify-center gap-1 text-xs font-bold text-emerald-400">
+                            <CheckCircle2 size={12} />
+                            نمره ثبت شده: <span dir="ltr">{submission!.grade}</span>
+                          </span>
+                        )}
+                      </div>
+
                       <button
                         onClick={handleSaveScore}
                         disabled={isSaving}
-                        className="lab-button-primary px-4 py-2 rounded-lg text-sm font-bold disabled:opacity-50"
+                        className="lab-button-primary px-4 py-2 h-[38px] rounded-xl text-sm font-bold disabled:opacity-50"
                       >
-                        {isSaving ? 'در حال ثبت...' : 'ثبت نمره'}
+                        {isSaving ? 'در حال ثبت...' : 'ثبت'}
                       </button>
-
-                      {submission?.grade !== null && (
-                        <span className="flex items-center gap-1.5 text-sm font-bold text-emerald-400 bg-emerald-500/10 px-3 py-1 rounded-lg">
-                          <CheckCircle2 size={14} />
-                          ثبت‌شده: {submission?.grade}
-                        </span>
-                      )}
                     </div>
+                  </div>
+
+                  {/* توضیحات */}
+                  <div className="w-full">
+                    <textarea
+                      value={descriptionInput}
+                      onChange={(e) => setDescriptionInput(e.target.value)}
+                      placeholder="توضیحات مصحح (اختیاری)..."
+                      disabled={isSaving}
+                      rows={2}
+                      className="w-full rounded-xl bg-white/5 border border-white/10 px-4 py-3 text-sm text-white placeholder:text-slate-500 focus:outline-none focus:border-cyan-500/50 disabled:opacity-50 resize-none transition-colors"
+                    />
                   </div>
                 </div>
 
