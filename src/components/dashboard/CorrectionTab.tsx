@@ -1,25 +1,16 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FileText, CheckCircle2, ChevronRight, ChevronLeft, Search } from 'lucide-react';
-import { submissionService, type Submission, type FilterType } from '@/services/examsService';
-
-type QuestionTab = 'Announcement' | 'q3' | 'q4' | 'q5';
-
-const questionTabs: { id: QuestionTab; label: string }[] = [
-  // { id: 'Announcement', label: 'اطلاعیه' },
-  { id: 'q3', label: 'سوال سوم' },
-  { id: 'q4', label: 'سوال چهارم' },
-  { id: 'q5', label: 'سوال پنجم' },
-];
-
-const questionIdMap: Record<Exclude<QuestionTab, 'Announcement'>, number> = {
-  q3: 1,
-  q4: 2,
-  q5: 3,
-};
+import {
+  submissionService,
+  type Submission,
+  type FilterType,
+  type Question,
+} from '@/services/examsService';
 
 export default function CorrectionTab() {
-  const [activeQuestion, setActiveQuestion] = useState<QuestionTab>('Announcement');
+  const [questions, setQuestions] = useState<Question[]>([]);
+  const [activeQuestion, setActiveQuestion] = useState<number | null>(null);
   const [submissions, setSubmissions] = useState<Submission[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -38,6 +29,27 @@ export default function CorrectionTab() {
   const [filterStatus, setFilterStatus] = useState<FilterType>('all');
 
   useEffect(() => {
+    let isMounted = true;
+    const fetchQuestions = async () => {
+      try {
+        const data = await submissionService.listQuestions();
+        if (isMounted) {
+          setQuestions(data.results || []);
+          if (data.results && data.results.length > 0) {
+            setActiveQuestion(data.results[0].id);
+          }
+        }
+      } catch (err) {
+        console.error('Failed to fetch questions:', err);
+      }
+    };
+    void fetchQuestions();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  useEffect(() => {
     const timer = setTimeout(() => {
       setDebouncedSearch(searchInput);
       setCurrentPage(1);
@@ -47,16 +59,10 @@ export default function CorrectionTab() {
   }, [searchInput]);
 
   const fetchSubmissions = useCallback(
-    async (
-      tab: Exclude<QuestionTab, 'Announcement'>,
-      page: number,
-      searchQuery: string,
-      filter: FilterType,
-    ) => {
+    async (questionId: number, page: number, searchQuery: string, filter: FilterType) => {
       setIsLoading(true);
       setError(null);
       try {
-        const questionId = questionIdMap[tab];
         const searchId = searchQuery.trim() !== '' ? Number(searchQuery) : undefined;
 
         const data = await submissionService.listSubmissions({
@@ -83,7 +89,7 @@ export default function CorrectionTab() {
   );
 
   useEffect(() => {
-    if (activeQuestion === 'Announcement') return;
+    if (activeQuestion === null) return;
     let isMounted = true;
 
     const loadData = async () => {
@@ -99,8 +105,8 @@ export default function CorrectionTab() {
     };
   }, [activeQuestion, fetchSubmissions, currentPage, debouncedSearch, filterStatus]);
 
-  const handleTabChange = (tabId: QuestionTab) => {
-    setActiveQuestion(tabId);
+  const handleTabChange = (questionId: number) => {
+    setActiveQuestion(questionId);
     setCurrentPage(1);
     setSearchInput('');
     setDebouncedSearch('');
@@ -127,19 +133,19 @@ export default function CorrectionTab() {
 
       {/* Sub-tabs */}
       <div className="flex flex-wrap gap-2 mb-6 border-b border-white/10 pb-4">
-        {questionTabs.map((tab) => {
-          const isActive = activeQuestion === tab.id;
+        {questions.map((q) => {
+          const isActive = activeQuestion === q.id;
           return (
             <button
-              key={tab.id}
-              onClick={() => handleTabChange(tab.id)}
+              key={q.id}
+              onClick={() => handleTabChange(q.id)}
               className={`px-4 py-2 rounded-xl text-sm font-bold transition-colors ${
                 isActive
                   ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/30'
                   : 'text-slate-300 hover:bg-white/5 hover:text-white border border-transparent'
               }`}
             >
-              {tab.label}
+              {q.sign_name}
             </button>
           );
         })}
@@ -147,13 +153,7 @@ export default function CorrectionTab() {
 
       {/* Content */}
       <div>
-        {activeQuestion === 'Announcement' && (
-          <p className="text-slate-400">
-            این بخش برای اطلاعیه‌های مربوط به تصحیح در نظر گرفته شده است.
-          </p>
-        )}
-
-        {activeQuestion !== 'Announcement' && (
+        {activeQuestion !== null && (
           <div className="flex flex-col gap-3">
             <div className="flex justify-start gap-3">
               <div className="flex items-center gap-1.5 bg-white/5 border border-white/10 p-1 rounded-xl w-fit ">

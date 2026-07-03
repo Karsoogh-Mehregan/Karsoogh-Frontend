@@ -1,5 +1,13 @@
 import { apiClient } from './api';
 
+export interface Question {
+  id: number;
+  question_picture: string;
+  sign_name: string;
+  max_grade: number;
+  exam: number;
+}
+
 export interface Submission {
   id: number;
   user: number;
@@ -29,6 +37,9 @@ interface ListSubmissionsParams {
 }
 
 class SubmissionService {
+  async listQuestions() {
+    return apiClient.get<PaginatedResponse<Question>>('/exams/questions/');
+  }
   async getSubmission(submissionId: number) {
     return apiClient.get<Submission>(`/exams/submissions/${submissionId}/`);
   }
