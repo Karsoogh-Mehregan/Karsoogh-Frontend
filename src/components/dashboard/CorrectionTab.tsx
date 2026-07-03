@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { FileText, CheckCircle2, ChevronRight, ChevronLeft, Search } from 'lucide-react';
 import { apiClient } from '@/services/api';
+import SelectedSubmissionId from '@/pages/selectedSubmissionId';
 
 type QuestionTab = 'Announcement' | 'q3' | 'q4' | 'q5';
 
@@ -40,8 +41,6 @@ export default function CorrectionTab() {
   const [submissions, setSubmissions] = useState<Submission[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [scoreInputs, setScoreInputs] = useState<Record<number, string>>({});
-  const [savingIds, setSavingIds] = useState<Set<number>>(new Set());
 
   const [currentPage, setCurrentPage] = useState(1);
   const [hasNext, setHasNext] = useState(false);
@@ -49,8 +48,9 @@ export default function CorrectionTab() {
 
   const [searchInput, setSearchInput] = useState('');
   const [debouncedSearch, setDebouncedSearch] = useState('');
-
   const [validSearchInput, setValidSearchInput] = useState(true);
+
+  const [selectedSubmissionId, setSelectedSubmissionId] = useState<number | null>(null);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -68,7 +68,7 @@ export default function CorrectionTab() {
       try {
         const questionId = questionIdMap[tab];
 
-        let url = `/exams/submissions/?question=${questionId}&page=${page}`;
+        let url = `/exams/submissions/?question=${questionId}&page=${page}&graded=${false}`;
         if (searchQuery.trim() !== '') {
           url = `/exams/submissions/?id=${Number(searchQuery)}`;
         }
@@ -106,37 +106,6 @@ export default function CorrectionTab() {
     };
   }, [activeQuestion, fetchSubmissions, currentPage, debouncedSearch]);
 
-  const getScoreInput = (submission: Submission) =>
-    scoreInputs[submission.id] ?? (submission.grade !== null ? String(submission.grade) : '');
-
-  const handleScoreChange = (id: number, value: string) => {
-    setScoreInputs((prev) => ({ ...prev, [id]: value }));
-  };
-
-  const handleSaveScore = async (submission: Submission) => {
-    const rawValue = getScoreInput(submission);
-    const parsedScore = Number(rawValue);
-    if (rawValue.trim() === '' || Number.isNaN(parsedScore)) return;
-
-    setSavingIds((prev) => new Set(prev).add(submission.id));
-
-    try {
-      const updated = await apiClient.post<Submission>(`/exams/submissions/${submission.id}/`, {
-        grade: parsedScore,
-      });
-
-      setSubmissions((prev) => prev.map((item) => (item.id === submission.id ? updated : item)));
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'خطا در ثبت نمره.');
-    } finally {
-      setSavingIds((prev) => {
-        const next = new Set(prev);
-        next.delete(submission.id);
-        return next;
-      });
-    }
-  };
-
   const handleTabChange = (tabId: QuestionTab) => {
     setActiveQuestion(tabId);
     setCurrentPage(1);
@@ -155,9 +124,23 @@ export default function CorrectionTab() {
     }
   };
 
-  const handleCardClick = (fileUrl: string) => {
-    window.open(fileUrl, '_blank', 'noopener,noreferrer');
+  const handleCardClick = (id: number) => {
+    setSelectedSubmissionId(id);
   };
+
+  if (selectedSubmissionId !== null) {
+    return (
+      <SelectedSubmissionId
+        submissionId={selectedSubmissionId}
+        onBack={() => {
+          setSelectedSubmissionId(null);
+          if (activeQuestion !== 'Announcement') {
+            void fetchSubmissions(activeQuestion, currentPage, debouncedSearch);
+          }
+        }}
+      />
+    );
+  }
 
   return (
     <div dir="rtl">
@@ -228,11 +211,10 @@ export default function CorrectionTab() {
               !error &&
               validSearchInput &&
               submissions.map((submission) => {
-                const isSaving = savingIds.has(submission.id);
                 return (
                   <div
                     key={submission.id}
-                    onClick={() => handleCardClick(submission.file)}
+                    onClick={() => handleCardClick(submission.id)}
                     className="flex flex-wrap items-center justify-between gap-4 w-full p-4 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 hover:border-cyan-500/30 transition-colors cursor-pointer"
                     title="مشاهده فایل"
                   >
@@ -245,24 +227,6 @@ export default function CorrectionTab() {
                       className="flex items-center gap-2 shrink-0"
                       onClick={(e) => e.stopPropagation()}
                     >
-                      <input
-                        type="number"
-                        value={getScoreInput(submission)}
-                        onChange={(e) => handleScoreChange(submission.id, e.target.value)}
-                        placeholder="نمره"
-                        disabled={isSaving}
-                        className="w-24 rounded-lg bg-white/5 border border-white/10 px-3 py-1.5 text-sm text-white placeholder:text-slate-500 focus:outline-none focus:border-cyan-500/50 disabled:opacity-50 no-spinner"
-                        style={{ height: '52px', width: '92px', marginLeft: '20px' }}
-                      />
-
-                      <button
-                        onClick={() => handleSaveScore(submission)}
-                        disabled={isSaving}
-                        className="lab-button-primary px-2 py-1.5 text-sm disabled:opacity-50"
-                      >
-                        {isSaving ? 'در حال ثبت...' : 'ثبت نمره'}
-                      </button>
-
                       {submission.grade !== null && (
                         <span className="flex items-center gap-1.5 text-sm font-bold text-emerald-400 bg-emerald-500/10 px-3 py-1 rounded-lg">
                           <CheckCircle2 size={14} />
