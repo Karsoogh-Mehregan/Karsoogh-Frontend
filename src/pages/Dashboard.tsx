@@ -5,10 +5,11 @@ import DashboardSidebar from '@/components/dashboard/DashboardSidebar';
 import ProfileTab from '@/components/dashboard/ProfileTab';
 import ResourcesTab from '@/components/dashboard/ResourcesTab';
 import ChallengesTab from '@/components/dashboard/ChallengesTab';
+import CorrectionTab from '@/components/dashboard/CorrectionTab';
 
-type Tab = 'profile' | 'resources' | 'challenges';
+type Tab = 'profile' | 'resources' | 'challenges' | 'correction';
 
-const validTabs: Tab[] = ['profile', 'resources', 'challenges'];
+const validTabs: Tab[] = ['profile', 'resources', 'challenges', 'correction'];
 
 export default function Dashboard() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -39,6 +40,7 @@ export default function Dashboard() {
               {activeTab === 'profile' && <ProfileTab />}
               {activeTab === 'resources' && <ResourcesTab />}
               {activeTab === 'challenges' && <ChallengesTab />}
+              {activeTab === 'correction' && <CorrectionTab />}
             </div>
           </section>
         </div>
