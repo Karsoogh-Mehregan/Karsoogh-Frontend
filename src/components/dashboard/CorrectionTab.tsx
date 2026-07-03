@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { FileText, CheckCircle2, ChevronRight, ChevronLeft, Search } from 'lucide-react';
-import { apiClient } from '@/services/api';
-import SelectedSubmissionId from '@/pages/SelectedSubmissionId';
+import { submissionService, type Submission, type FilterType } from '@/services/submissionService';
 
 type QuestionTab = 'Announcement' | 'q3' | 'q4' | 'q5';
 
@@ -18,26 +18,6 @@ const questionIdMap: Record<Exclude<QuestionTab, 'Announcement'>, number> = {
   q5: 3,
 };
 
-interface Submission {
-  id: number;
-  user: number;
-  question: number;
-  question_name: string;
-  exam_id: number;
-  file: string;
-  grade: number | null;
-  max_grade: number | null;
-}
-
-interface PaginatedResponse<T> {
-  count: number;
-  next: string | null;
-  previous: string | null;
-  results: T[];
-}
-
-type FilterType = 'all' | 'graded' | 'ungraded';
-
 export default function CorrectionTab() {
   const [activeQuestion, setActiveQuestion] = useState<QuestionTab>('Announcement');
   const [submissions, setSubmissions] = useState<Submission[]>([]);
@@ -52,7 +32,7 @@ export default function CorrectionTab() {
   const [debouncedSearch, setDebouncedSearch] = useState('');
   const [validSearchInput, setValidSearchInput] = useState(true);
 
-  const [selectedSubmissionId, setSelectedSubmissionId] = useState<number | null>(null);
+  const navigate = useNavigate();
 
   const [filterStatus, setFilterStatus] = useState<FilterType>('all');
 
@@ -76,20 +56,14 @@ export default function CorrectionTab() {
       setError(null);
       try {
         const questionId = questionIdMap[tab];
+        const searchId = searchQuery.trim() !== '' ? Number(searchQuery) : undefined;
 
-        let url = `/exams/submissions/?question=${questionId}&page=${page}`;
-
-        if (filter === 'graded') {
-          url += `&graded=true`;
-        } else if (filter === 'ungraded') {
-          url += `&graded=false`;
-        }
-
-        if (searchQuery.trim() !== '') {
-          url = `/exams/submissions/?id=${Number(searchQuery)}`;
-        }
-
-        const data = await apiClient.get<PaginatedResponse<Submission>>(url);
+        const data = await submissionService.listSubmissions({
+          questionId,
+          page,
+          filter,
+          searchId,
+        });
         setSubmissions(data.results || []);
         setHasNext(!!data.next);
         setHasPrevious(!!data.previous);
@@ -141,22 +115,8 @@ export default function CorrectionTab() {
   };
 
   const handleCardClick = (id: number) => {
-    setSelectedSubmissionId(id);
+    navigate(`/dashboard/submission/${id}`);
   };
-
-  if (selectedSubmissionId !== null) {
-    return (
-      <SelectedSubmissionId
-        submissionId={selectedSubmissionId}
-        onBack={() => {
-          setSelectedSubmissionId(null);
-          if (activeQuestion !== 'Announcement') {
-            void fetchSubmissions(activeQuestion, currentPage, debouncedSearch, filterStatus);
-          }
-        }}
-      />
-    );
-  }
 
   return (
     <div dir="rtl">
@@ -192,8 +152,8 @@ export default function CorrectionTab() {
 
         {activeQuestion !== 'Announcement' && (
           <div className="flex flex-col gap-3">
-            <div className="flex justify-start mb-2">
-              <div className="flex items-center gap-1.5 bg-white/5 border border-white/10 p-1 rounded-xl w-fit mb-2">
+            <div className="flex justify-start">
+              <div className="flex items-center gap-1.5 bg-white/5 border border-white/10 p-1 rounded-xl w-fit ">
                 <button
                   onClick={() => {
                     setFilterStatus('all');
@@ -234,19 +194,20 @@ export default function CorrectionTab() {
                   منتظر تصحیح
                 </button>
               </div>
-            </div>
-            <div className="relative w-full mb-2">
-              <Search
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400"
-                size={18}
-              />
-              <input
-                type="text"
-                value={searchInput}
-                onChange={handleSearchInput}
-                placeholder="جستجوی شناسه ..."
-                className="w-full rounded-xl bg-white/5 border border-white/10 pr-10 pl-4 py-3 text-sm text-white placeholder:text-slate-500 focus:outline-none focus:border-cyan-500/50 transition-colors"
-              />
+
+              <div className="relative mr-2">
+                <Search
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400"
+                  size={18}
+                />
+                <input
+                  type="text"
+                  value={searchInput}
+                  onChange={handleSearchInput}
+                  placeholder="جستجوی شناسه ..."
+                  className="w-full rounded-xl bg-white/5 border border-white/10 pr-10 pl-4 py-3 text-sm text-white placeholder:text-slate-500 focus:outline-none focus:border-cyan-500/50 transition-colors"
+                />
+              </div>
             </div>
 
             {!validSearchInput && (
