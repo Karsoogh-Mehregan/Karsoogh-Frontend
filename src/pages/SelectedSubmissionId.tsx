@@ -1,7 +1,15 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { submissionService, type Submission } from '@/services/examsService';
-import { CheckCircle2, FileText, ArrowRight, RotateCw, RotateCcw } from 'lucide-react';
+import {
+  CheckCircle2,
+  FileText,
+  ArrowRight,
+  RotateCw,
+  RotateCcw,
+  ZoomIn,
+  ZoomOut,
+} from 'lucide-react';
 
 export default function SelectedSubmissionId() {
   const { submissionId: paramId } = useParams<{ submissionId: string }>();
@@ -15,6 +23,45 @@ export default function SelectedSubmissionId() {
   const [descriptionInput, setDescriptionInput] = useState('');
   const [isSaving, setIsSaving] = useState(false);
   const [rotation, setRotation] = useState(0);
+  const [aspectRatio, setAspectRatio] = useState(1);
+  const [scale, setScale] = useState(1);
+  const [scaleInputStr, setScaleInputStr] = useState('100');
+
+  const minZoom = 0.1;
+  const maxZoom = 2;
+
+  const zoomIn = () => {
+    const newScale = Math.min(scale + 0.25, maxZoom);
+    setScale(newScale);
+    setScaleInputStr(Math.round(newScale * 100).toString());
+  };
+
+  const zoomOut = () => {
+    const newScale = Math.max(scale - 0.25, minZoom);
+    setScale(newScale);
+    setScaleInputStr(Math.round(newScale * 100).toString());
+  };
+
+  const handleScaleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setScaleInputStr(e.target.value);
+  };
+
+  const handleScaleSubmit = () => {
+    const parsed = parseInt(scaleInputStr, 10);
+    if (!isNaN(parsed)) {
+      const bounded = Math.min(Math.max(parsed, minZoom * 100), maxZoom * 100);
+      setScale(bounded / 100);
+      setScaleInputStr(bounded.toString());
+    } else {
+      setScaleInputStr(Math.round(scale * 100).toString());
+    }
+  };
+
+  const handleScaleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      handleScaleSubmit();
+    }
+  };
 
   useEffect(() => {
     const fetchDetailedSubmission = async () => {
@@ -100,7 +147,7 @@ export default function SelectedSubmissionId() {
         <div className="p-4 md:p-8">
           <section className="mx-auto max-w-5xl">
             <div className="lab-card p-6 md:p-8">
-              <div className="flex flex-col h-[calc(100vh-10rem)] gap-4">
+              <div className="flex flex-col min-h-[calc(100vh-10rem)] gap-4">
                 <div className="flex flex-col gap-4 border-b border-white/10 pb-4 shrink-0">
                   <div className="flex items-start justify-between">
                     <div className="flex items-center gap-4">
@@ -195,6 +242,32 @@ export default function SelectedSubmissionId() {
                       >
                         <RotateCw size={16} />
                       </button>
+                      <div className="w-px h-4 bg-white/10 mx-1"></div>
+                      <button
+                        onClick={zoomOut}
+                        className="p-2 text-slate-300 hover:text-white hover:bg-white/5 rounded-lg transition-colors"
+                        title="کوچک‌نمایی"
+                      >
+                        <ZoomOut size={16} />
+                      </button>
+                      <div className="flex items-center" dir="ltr">
+                        <input
+                          type="text"
+                          value={scaleInputStr}
+                          onChange={handleScaleChange}
+                          onBlur={handleScaleSubmit}
+                          onKeyDown={handleScaleKeyDown}
+                          className="w-8 text-center bg-transparent text-xs text-slate-400 font-bold focus:outline-none focus:text-white"
+                        />
+                        <span className="text-xs text-slate-400 font-bold">%</span>
+                      </div>
+                      <button
+                        onClick={zoomIn}
+                        className="p-2 text-slate-300 hover:text-white hover:bg-white/5 rounded-lg transition-colors"
+                        title="بزرگ‌نمایی"
+                      >
+                        <ZoomIn size={16} />
+                      </button>
                     </div>
                   )}
                 </div>
@@ -209,13 +282,48 @@ export default function SelectedSubmissionId() {
                   {submission?.file ? (
                     <div className="flex flex-col h-full p-4 gap-3">
                       {['png', 'jpg', 'jpeg', 'gif', 'webp'].includes(fileExt) ? (
-                        <div className="flex-1 w-full overflow-auto flex items-center justify-center bg-slate-900 rounded-xl p-4">
-                          <img
-                            src={submission.file}
-                            alt="پاسخ کاربر"
-                            style={{ transform: `rotate(${rotation}deg)` }}
-                            className="max-w-full max-h-full object-contain rounded-lg transition-transform duration-300"
-                          />
+                        <div
+                          className="flex-1 w-full overflow-auto bg-slate-900 rounded-xl p-4"
+                          style={{ containerType: 'inline-size' }}
+                        >
+                          <div
+                            className="mx-auto relative transition-all duration-300"
+                            style={{
+                              width: `calc(100% * ${scale})`,
+                              height:
+                                rotation % 180 !== 0
+                                  ? `calc((100cqw - 2rem) * ${aspectRatio} * ${scale})`
+                                  : 'auto',
+                            }}
+                          >
+                            <img
+                              src={submission.file}
+                              alt="پاسخ کاربر"
+                              onLoad={(e) => {
+                                const { naturalWidth, naturalHeight } = e.currentTarget;
+                                if (naturalHeight) setAspectRatio(naturalWidth / naturalHeight);
+                              }}
+                              style={{
+                                ...(rotation % 180 !== 0
+                                  ? {
+                                      width: `calc((100cqw - 2rem) * ${aspectRatio} * ${scale})`,
+                                      height: `calc((100cqw - 2rem) * ${scale})`,
+                                      maxWidth: 'none',
+                                      maxHeight: 'none',
+                                      position: 'absolute',
+                                      top: '50%',
+                                      left: '50%',
+                                      transform: `translate(-50%, -50%) rotate(${rotation}deg)`,
+                                    }
+                                  : {
+                                      width: '100%',
+                                      height: 'auto',
+                                      transform: `rotate(${rotation}deg)`,
+                                    }),
+                              }}
+                              className="object-contain rounded-lg transition-all duration-300"
+                            />
+                          </div>
                         </div>
                       ) : (
                         <div className="flex-1 w-full flex flex-col items-center justify-center gap-4 bg-slate-900 rounded-xl p-4 text-center">
