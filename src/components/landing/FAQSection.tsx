@@ -9,7 +9,7 @@ export function FAQSection() {
         eyebrow="پرسش و پاسخ"
         title="سوالات متداول"
         icon={CircleHelp}
-        description="پاسخ‌ها بر اساس محتوای فرانت قدیمی کارسوق بازنویسی شده‌اند."
+        description="اگه جواب سوالت رو پیدا نکردی به ادمین کارسوق پیام بده😉"
       />
 
       <div className="mx-auto grid max-w-4xl gap-3">
