@@ -1,5 +1,5 @@
 import { MDXProvider } from '@mdx-js/react';
-import { RouterProvider } from 'react-router-dom';
+import { RouterProvider } from 'react-router';
 import { Toaster } from 'react-hot-toast';
 import { AuthProvider } from '@/context/AuthContext';
 import { mdxComponents } from '@/components/MDXComponents';

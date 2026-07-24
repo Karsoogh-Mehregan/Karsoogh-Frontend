@@ -3,7 +3,7 @@ import { authService } from '@/services/authService';
 import { AlertCircle, ArrowLeft, Eye, EyeOff, LockKeyhole, UserRound } from 'lucide-react';
 import { useEffect, useState, type FormEvent } from 'react';
 import toast from 'react-hot-toast';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router';
 
 export default function LoginPage() {
   const { login, isAuthenticated } = useAuth();

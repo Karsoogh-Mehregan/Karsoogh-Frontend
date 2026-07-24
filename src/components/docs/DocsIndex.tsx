@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import { ChevronLeft } from 'lucide-react';
 import { allDocs } from '@/docs/registry';
 export default function DocsIndex() {

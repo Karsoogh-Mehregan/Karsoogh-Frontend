@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import { AlertCircle, Trophy, ChevronLeft, CheckCircle, Clock, XCircle } from 'lucide-react';
 import { challengeService, type ChallengeListItem } from '@/services/challengeService';
 import Skeleton from '@/components/Skeleton';

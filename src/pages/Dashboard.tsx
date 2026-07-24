@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router';
 
 import DashboardSidebar from '@/components/dashboard/DashboardSidebar';
 import ProfileTab from '@/components/dashboard/ProfileTab';

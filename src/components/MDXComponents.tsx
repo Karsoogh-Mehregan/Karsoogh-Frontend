@@ -1,5 +1,5 @@
 /* eslint-disable react-refresh/only-export-components -- MDX element map, not route components */
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import type { ComponentPropsWithoutRef } from 'react';
 import type { MDXComponents } from 'mdx/types';
 
