@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import { FileText, CheckCircle2, ChevronRight, ChevronLeft, Search } from 'lucide-react';
 import {
   submissionService,

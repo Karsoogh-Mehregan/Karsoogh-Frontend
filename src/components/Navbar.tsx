@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { FlaskConical, LogIn, Menu, UserRoundPlus, X } from 'lucide-react';
 import logoIcon from '@/assets/Karsoogh.ico';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router';
 
 const useLinkClickHandler = () => {
   const navigate = useNavigate();
