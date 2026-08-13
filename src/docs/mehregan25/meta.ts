@@ -1,8 +1,9 @@
-import type { DocMeta } from '@/docs/types';
+import type { YearMeta } from '@/docs/types';
 
-export const meta: DocMeta = {
+export const meta: YearMeta = {
   title: 'بیست و پنجمین دوره',
-  description: 'مستندات دوره ۲۵ کارسوق',
-  tabOrder: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'],
+  description: 'مستندات کارسوق ۲۵',
+  order: 25,
+  sectionOrder: ['exam', 'virtual', 'course'],
   isVisible: true,
 };

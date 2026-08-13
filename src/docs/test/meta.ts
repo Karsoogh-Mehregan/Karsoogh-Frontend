@@ -1,8 +1,8 @@
-import type { DocMeta } from '@/docs/types';
+import type { YearMeta } from '@/docs/types';
 
-export const meta: DocMeta = {
+export const meta: YearMeta = {
   title: 'تست',
   description: 'توضیحات کلی این مستند در meta.ts',
-  tabOrder: ['first', 'second'],
+  order: 0,
   isVisible: false,
 };
