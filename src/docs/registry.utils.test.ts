@@ -10,6 +10,7 @@ import {
   parseDocTabPath,
   parseSectionMetaPath,
   parseYearMetaPath,
+  resolveSectionSlug,
   sortDocTabs,
   sortSectionSlugs,
 } from '@/docs/registry.utils';
@@ -66,16 +67,27 @@ describe('sortDocTabs', () => {
 });
 
 describe('sortSectionSlugs', () => {
-  it('uses the default exam / virtual / course order', () => {
-    expect(sortSectionSlugs(['course', 'exam', 'virtual'])).toEqual(DEFAULT_SECTION_ORDER);
+  it('uses the default exam / virtual / summer-camp order', () => {
+    expect(sortSectionSlugs(['summer-camp', 'exam', 'virtual'])).toEqual(DEFAULT_SECTION_ORDER);
   });
 
   it('appends unknown sections after the known order', () => {
-    expect(sortSectionSlugs(['workshop', 'exam', 'course'])).toEqual([
+    expect(sortSectionSlugs(['workshop', 'exam', 'summer-camp'])).toEqual([
       'exam',
-      'course',
+      'summer-camp',
       'workshop',
     ]);
+  });
+});
+
+describe('resolveSectionSlug', () => {
+  it('maps the legacy course slug to summer-camp', () => {
+    expect(resolveSectionSlug('course')).toBe('summer-camp');
+  });
+
+  it('leaves current slugs unchanged', () => {
+    expect(resolveSectionSlug('summer-camp')).toBe('summer-camp');
+    expect(resolveSectionSlug('exam')).toBe('exam');
   });
 });
 
@@ -97,22 +109,29 @@ describe('buildSectionSummary', () => {
     const summary = buildSectionSummary(
       'mehregan26',
       'exam',
-      { title: 'آزمون', tabOrder: ['first'] },
+      { title: 'آزمون‌ها', tabOrder: ['first'] },
       ['first'],
       { first: { title: 'مرحله اول' } },
     );
-    expect(summary?.title).toBe('آزمون');
+    expect(summary?.title).toBe('آزمون‌ها');
     expect(summary?.tabLabels.first).toBe('مرحله اول');
   });
 
   it('returns null when there are no tabs', () => {
     expect(buildSectionSummary('mehregan26', 'exam', undefined, [], {})).toBeNull();
   });
+
+  it('falls back to default section titles', () => {
+    const summary = buildSectionSummary('mehregan25', 'summer-camp', undefined, ['1'], {
+      '1': { title: 'روز اول' },
+    });
+    expect(summary?.title).toBe('دوره تابستان');
+  });
 });
 
 describe('buildYearSummary', () => {
   it('uses the first section as default', () => {
-    const exam = buildSectionSummary('mehregan26', 'exam', { title: 'آزمون' }, ['first'], {
+    const exam = buildSectionSummary('mehregan26', 'exam', { title: 'آزمون‌ها' }, ['first'], {
       first: { title: 'مرحله اول' },
     });
     const summary = buildYearSummary('mehregan26', { title: 'بیست و ششمین دوره' }, [exam!]);
@@ -130,7 +149,7 @@ describe('collectYearSlugs', () => {
     expect(
       collectYearSlugs(
         ['./mehregan26/meta.ts'],
-        ['./mehregan25/course/1.mdx', './mehregan26/exam/01-first-round.mdx'],
+        ['./mehregan25/summer-camp/1.mdx', './mehregan26/exam/01-first-round.mdx'],
       ),
     ).toEqual(expect.arrayContaining(['mehregan25', 'mehregan26']));
   });
@@ -141,8 +160,8 @@ describe('collectSectionSlugs', () => {
     expect(
       collectSectionSlugs(
         'mehregan26',
-        ['./mehregan26/exam/meta.ts', './mehregan25/course/meta.ts'],
-        ['./mehregan26/virtual/talks.mdx', './mehregan25/course/1.mdx'],
+        ['./mehregan26/exam/meta.ts', './mehregan25/summer-camp/meta.ts'],
+        ['./mehregan26/virtual/talks.mdx', './mehregan25/summer-camp/1.mdx'],
       ),
     ).toEqual(expect.arrayContaining(['exam', 'virtual']));
   });
@@ -150,9 +169,15 @@ describe('collectSectionSlugs', () => {
 
 describe('findSectionByTab', () => {
   it('finds the section that owns a legacy tab slug', () => {
-    const exam = buildSectionSummary('mehregan26', 'exam', { title: 'آزمون' }, ['01-first-round'], {
-      '01-first-round': { title: 'مرحله اول' },
-    });
+    const exam = buildSectionSummary(
+      'mehregan26',
+      'exam',
+      { title: 'آزمون‌ها' },
+      ['01-first-round'],
+      {
+        '01-first-round': { title: 'مرحله اول' },
+      },
+    );
     expect(findSectionByTab([exam!], '01-first-round')?.slug).toBe('exam');
   });
 });

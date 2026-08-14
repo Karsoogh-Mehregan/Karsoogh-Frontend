@@ -5,7 +5,22 @@ import type { SectionMeta, SectionSummary, YearMeta, YearSummary } from '@/docs/
 export const DOC_TAB_MDX_PATTERN = /^\.\/([^/]+)\/([^/]+)\/([^/]+)\.mdx$/;
 
 /** Shared section order so new years stay aligned; extra folders append. */
-export const DEFAULT_SECTION_ORDER = ['exam', 'virtual', 'course'];
+export const DEFAULT_SECTION_ORDER = ['exam', 'virtual', 'summer-camp'];
+
+export const DEFAULT_SECTION_TITLES: Record<string, string> = {
+  exam: 'آزمون‌ها',
+  virtual: 'ارائه‌های مجازی',
+  'summer-camp': 'دوره تابستان',
+};
+
+/** Old section slugs that still redirect to the current ones. */
+export const SECTION_SLUG_ALIASES: Record<string, string> = {
+  course: 'summer-camp',
+};
+
+export function resolveSectionSlug(section: string): string {
+  return SECTION_SLUG_ALIASES[section] ?? section;
+}
 
 export function parseDocTabPath(
   path: string,
@@ -82,7 +97,7 @@ export function buildSectionSummary(
   return {
     year,
     slug,
-    title: meta?.title ?? firstFm?.title ?? slug,
+    title: meta?.title ?? DEFAULT_SECTION_TITLES[slug] ?? firstFm?.title ?? slug,
     description: meta?.description ?? firstFm?.description,
     tabs,
     tabLabels,

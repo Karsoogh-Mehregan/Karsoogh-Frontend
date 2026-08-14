@@ -14,9 +14,11 @@ src/docs/
 
 Shared section slugs (add more folders anytime; unknown ones just append):
 
-- `exam` — آزمون
+- `exam` — آزمون‌ها
 - `virtual` — ارائه‌های مجازی
-- `course` — دوره
+- `summer-camp` — دوره تابستان
+
+Legacy URL alias: `/docs/:year/course/...` redirects to `/docs/:year/summer-camp/...`.
 
 A section appears only when it has at least one MDX tab. Empty placeholders are not required.
 

@@ -9,6 +9,7 @@ import {
   getMdxModulePath,
   getTabLabel,
   resolveLegacySection,
+  resolveSectionSlug,
 } from '@/docs/registry';
 import MdxTabPanel from '@/components/docs/MdxTabPanel';
 
@@ -26,6 +27,12 @@ export default function DocViewer() {
   const yearSummary = getYearSummary(year);
   if (!yearSummary) {
     return <Navigate to="/docs" replace />;
+  }
+
+  const canonicalSection = resolveSectionSlug(section);
+  if (canonicalSection !== section) {
+    const suffix = tabName ? `/${tabName}` : '';
+    return <Navigate to={`/docs/${year}/${canonicalSection}${suffix}`} replace />;
   }
 
   const sectionSummary = getSectionSummary(year, section);

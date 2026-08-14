@@ -8,10 +8,13 @@ import {
   collectYearSlugs,
   findSectionByTab,
   parseDocTabPath,
+  resolveSectionSlug,
   sortDocTabs,
   sortSectionSlugs,
   sortYearSummaries,
 } from '@/docs/registry.utils';
+
+export { resolveSectionSlug };
 
 export type MdxModule = {
   default: ComponentType;
