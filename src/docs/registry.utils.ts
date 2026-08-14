@@ -1,13 +1,44 @@
 import type { MdxFrontmatter } from '@/docs/frontmatter';
-import type { DocMeta, DocSummary } from '@/docs/types';
+import type { SectionMeta, SectionSummary, YearMeta, YearSummary } from '@/docs/types';
 
-/** فقط `src/docs/<slug>/<tab>.mdx` — بدون زیرپوشه */
-export const DOC_TAB_MDX_PATTERN = /^\.\/([^/]+)\/([^/]+)\.mdx$/;
+/** `src/docs/<year>/<section>/<tab>.mdx` */
+export const DOC_TAB_MDX_PATTERN = /^\.\/([^/]+)\/([^/]+)\/([^/]+)\.mdx$/;
 
-export function parseDocTabPath(path: string): { slug: string; tab: string } | null {
+/** Shared section order so new years stay aligned; extra folders append. */
+export const DEFAULT_SECTION_ORDER = ['exam', 'virtual', 'summer-camp'];
+
+export const DEFAULT_SECTION_TITLES: Record<string, string> = {
+  exam: 'آزمون‌ها',
+  virtual: 'ارائه‌های مجازی',
+  'summer-camp': 'دوره تابستان',
+};
+
+/** Old section slugs that still redirect to the current ones. */
+export const SECTION_SLUG_ALIASES: Record<string, string> = {
+  course: 'summer-camp',
+};
+
+export function resolveSectionSlug(section: string): string {
+  return SECTION_SLUG_ALIASES[section] ?? section;
+}
+
+export function parseDocTabPath(
+  path: string,
+): { year: string; section: string; tab: string } | null {
   const match = path.match(DOC_TAB_MDX_PATTERN);
   if (!match) return null;
-  return { slug: match[1], tab: match[2] };
+  return { year: match[1], section: match[2], tab: match[3] };
+}
+
+export function parseYearMetaPath(path: string): string | null {
+  const match = path.match(/^\.\/([^/]+)\/meta\.ts$/);
+  return match ? match[1] : null;
+}
+
+export function parseSectionMetaPath(path: string): { year: string; section: string } | null {
+  const match = path.match(/^\.\/([^/]+)\/([^/]+)\/meta\.ts$/);
+  if (!match) return null;
+  return { year: match[1], section: match[2] };
 }
 
 export function sortDocTabs(tabs: string[], tabOrder?: string[]): string[] {
@@ -23,9 +54,22 @@ export function sortDocTabs(tabs: string[], tabOrder?: string[]): string[] {
   });
 }
 
+export function sortSectionSlugs(slugs: string[], sectionOrder?: string[]): string[] {
+  const order = sectionOrder?.length ? sectionOrder : DEFAULT_SECTION_ORDER;
+
+  return [...slugs].sort((a, b) => {
+    const ai = order.indexOf(a);
+    const bi = order.indexOf(b);
+    if (ai === -1 && bi === -1) return a.localeCompare(b);
+    if (ai === -1) return 1;
+    if (bi === -1) return -1;
+    return ai - bi;
+  });
+}
+
 export function buildTabLabels(
   tabs: string[],
-  meta: DocMeta | undefined,
+  meta: SectionMeta | undefined,
   frontmatterByTab: Record<string, MdxFrontmatter>,
 ): Record<string, string> {
   return Object.fromEntries(
@@ -37,12 +81,13 @@ export function buildTabLabels(
   );
 }
 
-export function buildDocSummary(
+export function buildSectionSummary(
+  year: string,
   slug: string,
-  meta: DocMeta | undefined,
+  meta: SectionMeta | undefined,
   tabs: string[],
   frontmatterByTab: Record<string, MdxFrontmatter>,
-): DocSummary | null {
+): SectionSummary | null {
   if (tabs.length === 0) return null;
 
   const tabLabels = buildTabLabels(tabs, meta, frontmatterByTab);
@@ -50,8 +95,9 @@ export function buildDocSummary(
   const firstFm = frontmatterByTab[firstTab];
 
   return {
+    year,
     slug,
-    title: meta?.title ?? firstFm?.title ?? slug,
+    title: meta?.title ?? DEFAULT_SECTION_TITLES[slug] ?? firstFm?.title ?? slug,
     description: meta?.description ?? firstFm?.description,
     tabs,
     tabLabels,
@@ -59,22 +105,71 @@ export function buildDocSummary(
   };
 }
 
-export function collectSlugsFromPaths(metaPaths: string[], mdxPaths: string[]): string[] {
+export function buildYearSummary(
+  slug: string,
+  meta: YearMeta | undefined,
+  sections: SectionSummary[],
+): YearSummary | null {
+  if (sections.length === 0) return null;
+
+  return {
+    slug,
+    title: meta?.title ?? slug,
+    description: meta?.description,
+    order: meta?.order,
+    sections,
+    defaultSection: sections[0].slug,
+  };
+}
+
+export function collectYearSlugs(yearMetaPaths: string[], mdxPaths: string[]): string[] {
   const slugs = new Set<string>();
 
-  for (const path of metaPaths) {
-    const match = path.match(/^\.\/([^/]+)\/meta\.ts$/);
-    if (match) slugs.add(match[1]);
+  for (const path of yearMetaPaths) {
+    const year = parseYearMetaPath(path);
+    if (year) slugs.add(year);
   }
 
   for (const path of mdxPaths) {
     const parsed = parseDocTabPath(path);
-    if (parsed) slugs.add(parsed.slug);
+    if (parsed) slugs.add(parsed.year);
   }
 
   return [...slugs];
 }
 
-export function sortDocSummaries(summaries: DocSummary[]): DocSummary[] {
-  return [...summaries].sort((a, b) => a.title.localeCompare(b.title, 'fa'));
+export function collectSectionSlugs(
+  year: string,
+  sectionMetaPaths: string[],
+  mdxPaths: string[],
+): string[] {
+  const slugs = new Set<string>();
+
+  for (const path of sectionMetaPaths) {
+    const parsed = parseSectionMetaPath(path);
+    if (parsed?.year === year) slugs.add(parsed.section);
+  }
+
+  for (const path of mdxPaths) {
+    const parsed = parseDocTabPath(path);
+    if (parsed?.year === year) slugs.add(parsed.section);
+  }
+
+  return [...slugs];
+}
+
+export function sortYearSummaries(summaries: YearSummary[]): YearSummary[] {
+  return [...summaries].sort((a, b) => {
+    const ao = a.order ?? Number.NEGATIVE_INFINITY;
+    const bo = b.order ?? Number.NEGATIVE_INFINITY;
+    if (ao !== bo) return bo - ao;
+    return a.title.localeCompare(b.title, 'fa');
+  });
+}
+
+export function findSectionByTab(
+  sections: SectionSummary[],
+  tab: string,
+): SectionSummary | undefined {
+  return sections.find((section) => section.tabs.includes(tab));
 }

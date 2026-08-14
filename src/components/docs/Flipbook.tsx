@@ -12,7 +12,7 @@ const allDocImages = import.meta.glob('../../docs/**/*.jpg', {
 }) as Record<string, string>;
 
 type FlipbookProps = {
-  /** Relative folder path inside src/docs (e.g., "mehregan26/first-round") */
+  /** Relative folder path inside src/docs (e.g., "mehregan26/exam/first-round") */
   folder?: string;
   /** Alternatively, pass pre-parsed page assets directly */
   pages?: PageAsset[];

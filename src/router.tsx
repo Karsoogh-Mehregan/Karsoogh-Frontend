@@ -49,7 +49,15 @@ const router = createBrowserRouter([
       },
 
       {
-        path: '/docs/:docName/:tabName?',
+        path: '/docs/:year',
+        lazy: async () => {
+          const { default: YearIndex } = await import('@/components/docs/YearIndex');
+          return { Component: YearIndex };
+        },
+      },
+
+      {
+        path: '/docs/:year/:section/:tabName?',
         lazy: async () => {
           const { default: DocViewer } = await import('@/components/docs/DocViewer');
           return { Component: DocViewer };
