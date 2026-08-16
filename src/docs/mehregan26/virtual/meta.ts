@@ -5,9 +5,9 @@ export const meta: SectionMeta = {
   description: 'گزارش و ویدیوی ارائه‌های کارسوق ۲۶',
   tabOrder: [
     '00-intro',
+    '03-mathematics-of-traffic',
     '01-mathematics-of-ai',
     '02-social-network-modeling',
-    '03-mathematics-of-traffic',
     '04-geometry-persian-architecture',
   ],
   isVisible: true,
