@@ -4,6 +4,6 @@ export const meta: YearMeta = {
   title: 'بیست و ششمین دوره',
   description: 'مستندات کارسوق ۲۶',
   order: 26,
-  sectionOrder: ['exam', 'virtual', 'summer-camp'],
+  sectionOrder: ['exam', 'weekly-challenge', 'virtual', 'summer-camp'],
   isVisible: true,
 };
